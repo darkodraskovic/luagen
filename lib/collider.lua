@@ -18,12 +18,16 @@ function Collider:setShape(shape, register)
 end
 
 function Collider:collide()
-    for shape, delta in pairs(self.entity.scene.collider:collisions(self.shape)) do
-        local e2 = shape.collider.entity
-        if not e2.exists or not e2.parent then return end
-        if not self.mask:find(shape.collider.layer) then return end
-        local e1 = self.entity
-        e1.signals:emit('collision', e1, e2, vector(delta.x, delta.y))
+    local candidates = self.entity.scene.collider:neighbors(self.shape)
+    for other in pairs(candidates) do
+        local e2 = other.collider.entity
+        if not e2.exists or not e2.parent then break end
+        if not self.mask:find(other.collider.layer) then break end
+        local collides, dx, dy = self.shape:collidesWith(other)
+        if collides then
+            local e1 = self.entity
+            e1.signals:emit('collision', e1, e2, vector(dx, dy))
+        end
     end
 end
 
