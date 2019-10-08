@@ -15,29 +15,22 @@ function Physics:init()
     self.elastic = 1
 end
 
-function Physics:register()
-    self.entity:registerSignal(
-        self.entity.signals, 'collision',
-        function(e, o, d) Physics.onCollision(e, o, d) end)
-end
-
 function Physics.onCollision(entity, other, delta)
     local phy1, phy2 = entity.physics, other.physics
     if phy1.dynamic then
         if phy2 and phy2.dynamic then
             entity.pos = entity.pos + delta
-            entity.collider:update()
+            entity.collider:updatePos()
             other.pos = other.pos - delta
-            other.collider:update()
+            other.collider:updatePos()
             Physics.resolveImpulse(phy1, phy2, delta)
         elseif other.collider.static then
             entity.pos = entity.pos + delta
-            entity.collider:update()
+            entity.collider:updatePos()
             phy1:bounce(delta)
         end
     end
 end
-
 
 function Physics:applyForce(force)
     self.acc = self.acc + force / self.mass
