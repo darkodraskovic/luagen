@@ -1,8 +1,9 @@
+HC = require 'lib.HC'
 Class = require 'lib.hump.class'
 Signal = require 'lib.hump.signal'
-HC = require 'lib.HC'
 Camera = require 'lib.camera'
 Entity = require 'lib.entity'
+Timer = require 'lib.hump.timer'
 
 Scene = Class{}
 
@@ -10,7 +11,8 @@ function Scene:init()
     self.signals = Signal.new()
     self.spaceHash = HC.new(150)    
     self.collider = HC.new(150)
-
+    self.timer = Timer.new()
+        
     self.root = Entity()
     self.root.exists, self.root.visible = true, true
     
@@ -60,6 +62,7 @@ end
 -- update
 
 function Scene:update(dt)
+    self.timer:update(dt)
     self:_addEntities()
     self.signals:emit('update', dt)
     self.root:update(dt)
@@ -88,6 +91,7 @@ function Scene:remove()
     self.signals:clearPattern('.*')
     self.spaceHash:resetHash()
     self.collider:resetHash()
+    self.timer:clear()
 end
 
 function Scene:reset()
