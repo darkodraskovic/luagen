@@ -17,6 +17,19 @@ function Collider:setShape(shape, register)
     if register then self.entity.scene.collider:register(shape) end
 end
 
+function Collider:setCollide(collide, cbk)
+    local e = self.entity
+    if (collide) then
+        self.collisionSig = e:registerSignal(
+            e.signals, 'collision', e.cbk or e['onCollision'])
+        self.collideSig = e:registerSignal(
+            e.scene.signals, 'collide', function () self:collide() end)
+    else
+        e:removeSignal(self.collisionSig)
+        e:removeSignal(self.collideSig)
+    end
+end
+
 function Collider:collide()
     local candidates = self.entity.scene.collider:neighbors(self.shape)
     for other in pairs(candidates) do
