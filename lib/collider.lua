@@ -44,12 +44,12 @@ function Collider:collide()
     local candidates = self.entity.scene.collider:neighbors(self.shape)
     for other in pairs(candidates) do
         local e2 = other.collider.entity
-        if not e2.exists or not e2.parent then break end
-        if not self.mask:find(other.collider.layer) then break end
-        local collides, dx, dy = self.shape:collidesWith(other)
-        if collides then
-            local e1 = self.entity
-            e1.signals:emit('collision', e1, e2, vector(dx, dy))
+        if e2.exists and e2.parent and self.mask:find(other.collider.layer) then
+            local collides, dx, dy = self.shape:collidesWith(other)
+            if collides then
+                local e1 = self.entity
+                e1.signals:emit('collision', e1, e2, vector(dx, dy))
+            end
         end
     end
 end
