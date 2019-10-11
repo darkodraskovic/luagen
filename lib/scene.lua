@@ -34,7 +34,7 @@ end
 -- entities
 
 function Scene:addEntity(type_, ...)
-    local e = type_()
+    local e = (type_ and type_()) or Entity()
     e.scene = self
     table.insert(self._entitiesToAdd, e)
     if e.onAdd then e:onAdd(...) end

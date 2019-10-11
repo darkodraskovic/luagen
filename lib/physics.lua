@@ -19,15 +19,13 @@ function Physics.onCollision(entity, other, delta)
     local phy1, phy2 = entity.physics, other.physics
     if phy1.dynamic and phy2 and phy2.dynamic then
         entity.pos = entity.pos + delta
-        entity.collider:updatePos()
+        entity.collider:update()
         other.pos = other.pos - delta
-        other.collider:updatePos()
+        other.collider:update()
         Physics.resolveImpulse(phy1, phy2, delta)
-        return
-    end
-    if other.collider.static then
+    elseif other.collider.static then
         entity.pos = entity.pos + delta
-        entity.collider:updatePos()
+        entity.collider:update()
         phy1:bounce(delta)
     end
 end
@@ -38,7 +36,7 @@ function Physics.resolveImpulse(phy1, phy2, delta)
     local relVel = phy2.vel - phy1.vel
     local normal = -delta:normalized()
     local contactVel = relVel * normal
-    if(contactVel > 0) then return end
+    if contactVel > 0 then return end
     local e = math.min(phy1.elastic, phy2.elastic)
     local j = -(1 + e) * contactVel
     j = j / (massInv1 + massInv2)

@@ -1,6 +1,16 @@
 Class = require 'lib.hump.class'
+vector = require 'lib.hump.vector'
+shapes = require 'lib.HC.shapes'
 
 Collider = Class{}
+
+function Collider.setOffset(vertices)
+    local poly = shapes.newPolygonShape(unpack(vertices))
+    local x1,y1,x2,y2 = poly:bbox()
+    local bx,by = (x2-x1)/2, (y2-y1)/2
+    local cx,cy = poly:center()
+    return vector(cx-bx,cy-by)
+end
 
 function Collider:init()
     self.layer = 'a'
@@ -47,6 +57,10 @@ end
 function Collider:updatePos()
     self.entity:updateTransform()
     self.shape:moveTo(self.entity:center())
+    if self.offset then
+        self.offset:rotateInplace(self.entity.rot - self.shape:rotation())
+        self.shape:move(self.offset:unpack())
+    end
 end
 
 function Collider:update()
