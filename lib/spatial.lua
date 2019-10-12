@@ -77,6 +77,12 @@ function Spatial:getChildren()
     return children
 end
 
+function Spatial:findChild(k,v)
+    for i,c in ipairs(self:getChildren()) do
+        if c[k] == v then return c end
+    end
+end
+
 -- remove
 
 function Spatial:remove()
