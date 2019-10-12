@@ -54,17 +54,13 @@ function Collider:collide()
     end
 end
 
-function Collider:updatePos()
+function Collider:update()
     self.entity:updateTransform()
     self.shape:moveTo(self.entity:center())
     if self.offset then
         self.offset:rotateInplace(self.entity.rot - self.shape:rotation())
         self.shape:move(self.offset:unpack())
     end
-end
-
-function Collider:update()
-    self:updatePos()
     self.shape:setRotation(self.entity:rotation())
 end
 
