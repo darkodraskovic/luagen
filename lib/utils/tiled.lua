@@ -32,13 +32,13 @@ end
 -- MAP
 
 function Tiled.parseMap(map, scene)
-    for i,v in ipairs(map.layers) do
+    for i,layerData in ipairs(map.layers) do
         local l = scene:addEntity()
-        l.name = v.name
+        l.name = layerData.name
         scene.root:addChild(l)
-        Tiled.setProperties(v,l)
-        if v.type == 'objectgroup' then
-            Tiled.parseObjectgroup(v, l, scene)
+        for k,v in pairs(layerData.properties) do l[k] = v end
+        if layerData.type == 'objectgroup' then
+            Tiled.parseObjectgroup(layerData, l, scene)
         end
     end    
 end
@@ -55,19 +55,9 @@ function Tiled.parseObjectgroup(layerData, layer, scene)
         e.pos = vector(o.x, o.y)
         layer:addChild(e)
         e.name = o.name
+        for k,v in pairs(o.properties) do e[k] = v end
         e.signals:emit('tiled', o)
-        Tiled.setProperties(o,e)
     end    
-end
-
-function Tiled.setProperties(o, e)
-    _tiled_e = e
-    local expr = ''
-    for k,v in pairs(o.properties) do
-        expr = expr .. '_tiled_e.' .. k .. '=' .. v .. ';'
-    end
-    assert(loadstring(expr))()
-    _tiled_e = nil
 end
 
 return Tiled
