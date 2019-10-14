@@ -1,5 +1,7 @@
-Class = require 'lib.hump.class'
-polygon = require 'lib.HC.polygon'
+local Class = require 'lib.hump.class'
+local polygon = require 'lib.HC.polygon'
+local Sprite = require 'lib.sprite'
+local resourceManager = require 'lib.resource-manager'
 
 local Tiled = {}
 
@@ -33,17 +35,27 @@ end
 
 function Tiled.parseMap(map, scene)
     for i,layerData in ipairs(map.layers) do
-        local l = scene:addEntity()
-        l.name = layerData.name
-        scene.root:addChild(l)
-        for k,v in pairs(layerData.properties) do l[k] = v end
-        if layerData.type == 'objectgroup' then
-            Tiled.parseObjectgroup(layerData, l, scene)
+        local layer = scene:addEntity()
+        layer.name = layerData.name
+        layer.visible = layerData.visible
+        layer.alpha = layerData.opacity
+        layer.offset = vector(layerData.offsetx, layerData.offsety)
+        scene.root:addChild(layer)
+        for k,v in pairs(layerData.properties) do layer[k] = v end
+        if Tiled[layerData.type] then
+            Tiled[layerData.type](layerData, layer, scene)
         end
     end    
 end
 
-function Tiled.parseObjectgroup(layerData, layer, scene)
+function Tiled.imagelayer(layerData, layer, scene)
+    local s = scene:addEntity(Sprite)
+    local img = resourceManager:getImage(layerData.image)
+    s:setImage(img)
+    layer:addChild(s)
+end
+
+function Tiled.objectgroup(layerData, layer, scene)
     for i,o in ipairs(layerData.objects) do
         if not _G[o.type] then require('entities.' .. o.type:lower()) end
         local o = Class.clone(o)
