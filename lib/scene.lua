@@ -95,11 +95,4 @@ function Scene:remove()
     self.timer:clear()
 end
 
-function Scene:reset()
-    self:remove()
-    self:init()
-end
-
--- module
-
 return Scene
