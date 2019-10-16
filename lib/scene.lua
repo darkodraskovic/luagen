@@ -41,16 +41,18 @@ function Scene:addEntity(type_, ...)
     return e
 end
 
-function Scene:removeEntity(e)
-    table.insert(self._entitiesToRemove, e)
-end
-
 function Scene:_addEntities()
     for i, e in ipairs(self._entitiesToAdd) do
         e.visible = true
         e.exists = true
     end
     self._entitiesToAdd = {}
+end
+
+function Scene:removeEntity(e)
+    e.exists = false
+    e.visible = false
+    table.insert(self._entitiesToRemove, e)
 end
 
 function Scene:_removeEntities()
