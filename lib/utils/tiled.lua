@@ -1,5 +1,6 @@
 local Class = require 'lib.hump.class'
 local polygon = require 'lib.HC.polygon'
+local shapes = require 'lib.HC.shapes'
 local Sprite = require 'lib.sprite'
 local resourceManager = require 'lib.resource-manager'
 
@@ -31,6 +32,21 @@ function Tiled.transformPolygon(o)
     return verts, dx, dy
 end
 
+function Tiled.getShape(o)
+    local shape
+    if o.shape == 'rectangle' then
+        shape = shapes.newPolygonShape(
+            0,0, o.width,0,
+            o.width, o.height, 0, o.height)
+    elseif o.shape == 'ellipse' then
+        shape = shapes.newCircleShape(0,0,o.width/2)
+    elseif o.shape == 'polygon' then
+        local verts = o.vertices or Tiled.transformPolygon(o)
+        shape = shapes.newPolygonShape(unpack(verts))
+    end
+    return shape
+end
+
 -- MAP
 
 function Tiled.parseMap(map, scene)
@@ -60,6 +76,7 @@ function Tiled.objectgroup(layerData, layer, scene)
         if not _G[o.type] then require('entities.' .. o.type:lower()) end
         local o = Class.clone(o)
         if o.shape == 'polygon' then
+            local dx, dy
             o.vertices, dx, dy = Tiled.transformPolygon(o)
             o.x = o.x + dx; o.y = o.y + dy
         end

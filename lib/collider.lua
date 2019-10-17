@@ -17,7 +17,7 @@ function Collider:init()
     self.mask = 'a'
 end
 
-function Collider:setShape(shape, register)
+function Collider:setShape(shape, register, offset)
     if self.shape then
         if self.shape == shape then return end
         self.entity.scene.collider:remove(self.shape)
@@ -25,6 +25,13 @@ function Collider:setShape(shape, register)
     self.shape = shape
     shape.collider = self
     if register then self.entity.scene.collider:register(shape) end
+    if offset then
+        if offset.x and offset.y then
+            self.offset = offset
+        else
+            self.offset = Collider.setOffset(offset)
+        end
+    end
 end
 
 function Collider:setCollide(collide, cbk)
