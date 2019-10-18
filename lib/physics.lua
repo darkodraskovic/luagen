@@ -1,6 +1,8 @@
 Class = require 'lib.hump.class'
 
-Physics = Class{}
+Physics = Class{
+    type = 'physics',
+}
 
 function Physics:init()
     self.mass = 1

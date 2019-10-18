@@ -27,10 +27,12 @@ end
 
 -- components
 
-function Entity:addComponent(type_)
+function Entity:addComponent(type_, ...)
     local c = type_()
     table.insert(self.components, c)
     c.entity = self
+    self[type_.type] = c
+    if c.onAdd then c:onAdd(...) end
     return c
 end
 

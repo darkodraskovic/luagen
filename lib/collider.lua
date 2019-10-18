@@ -2,7 +2,9 @@ Class = require 'lib.hump.class'
 vector = require 'lib.hump.vector'
 shapes = require 'lib.HC.shapes'
 
-Collider = Class{}
+Collider = Class{
+    type = 'collider',
+}
 
 function Collider.setOffset(vertices)
     local poly = shapes.newPolygonShape(unpack(vertices))
@@ -17,7 +19,7 @@ function Collider:init()
     self.mask = 'a'
 end
 
-function Collider:setShape(shape, register, offset)
+function Collider:onAdd(shape, register, opts)
     if self.shape then
         if self.shape == shape then return end
         self.entity.scene.collider:remove(self.shape)
@@ -25,6 +27,8 @@ function Collider:setShape(shape, register, offset)
     self.shape = shape
     shape.collider = self
     if register then self.entity.scene.collider:register(shape) end
+
+    local offset = opts and opts.offset
     if offset then
         if offset.x and offset.y then
             self.offset = offset
@@ -32,6 +36,11 @@ function Collider:setShape(shape, register, offset)
             self.offset = Collider.setOffset(offset)
         end
     end
+
+    local collide = opts and opts.collide
+    if collide then self:setCollide(opts.collide) end
+
+    self.static = opts and opts.static
 end
 
 function Collider:setCollide(collide, cbk)
