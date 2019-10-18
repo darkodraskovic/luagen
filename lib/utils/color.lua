@@ -130,9 +130,11 @@ function Color.brighten(color, percent)
     return Color.hsvToRgb(h, s, v * (1 + percent/100), a)
 end
 
-function Color.hex2rgb(hex)
+function Color.hex2rgb(hex, prea)
     hex = hex:gsub("#","")
     local r,g,b,a = tonumber("0x"..hex:sub(1,2)), tonumber("0x"..hex:sub(3,4)), tonumber("0x"..hex:sub(5,6)), tonumber("0x"..hex:sub(7,8))
+
+    if prea then return {g/255,b/255,a/255,r/255} end
     return {r/255,g/255,b/255,a/255}
 end
 
