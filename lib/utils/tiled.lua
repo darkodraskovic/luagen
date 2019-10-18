@@ -3,6 +3,7 @@ local polygon = require 'lib.HC.polygon'
 local shapes = require 'lib.HC.shapes'
 local Sprite = require 'lib.sprite'
 local resourceManager = require 'lib.resource-manager'
+local Color = require 'lib.utils.color'
 
 local Tiled = {}
 
@@ -45,6 +46,49 @@ function Tiled.getShape(o)
         shape = shapes.newPolygonShape(unpack(verts))
     end
     return shape
+end
+
+-- DRAW
+
+function Tiled._drawObject(o, ...)
+    local fill, line = o.properties.fill, o.properties.line
+    if fill then
+        love.graphics.setColor(unpack(Color.hex2rgb(fill, true)))
+        love.graphics[o.shape]('fill',...)
+    end
+    if line then
+        love.graphics.setColor(unpack(Color.hex2rgb(line, true)))
+        love.graphics[o.shape]('line',...)
+    end
+end
+
+function Tiled.drawObject(o, pos)
+    love.graphics.push()
+    x,y = pos.x or 0, pos.y or 0
+    love.graphics.translate(x, y)
+    
+    for k,v in pairs(o.properties) do
+        if love.graphics['set' .. k] then love.graphics['set' .. k](v) end
+    end
+
+    if o.shape == 'rectangle' then
+        Tiled._drawObject(o, 0, 0, o.width, o.height)
+    elseif o.shape == 'ellipse' then
+        local radiusx, radiusy = o.width/2, o.height/2
+        love.graphics.push()
+        love.graphics.translate(radiusx, radiusy)
+        Tiled._drawObject(o, 0, 0, radiusx, radiusy)
+        love.graphics.pop()
+    elseif o.shape == 'polygon' then
+        local vertices = o.vertices or Tiled.transformPolygon(o)
+        Tiled._drawObject(o, unpack(vertices))
+    end
+
+    love.graphics.pop()
+end
+
+function Tiled.getObjectImage(o)
+
 end
 
 -- MAP
