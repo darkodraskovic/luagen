@@ -7,7 +7,7 @@ local Color = require 'lib.utils.color'
 
 local Tiled = {}
 
--- HELPERS
+-- POLYGON
 
 function Tiled.flattenVertices(vertices)
     local verts = {}
@@ -32,6 +32,8 @@ function Tiled.transformPolygon(o)
     end
     return verts, dx, dy
 end
+
+-- SHAPE
 
 function Tiled.getShape(o)
     local shape
@@ -64,7 +66,8 @@ end
 
 function Tiled.drawObject(o, pos)
     love.graphics.push()
-    x,y = pos.x or 0, pos.y or 0
+    local x,y
+    if pos then x,y = pos:unpack() else x,y = 0,0 end
     love.graphics.translate(x, y)
     
     for k,v in pairs(o.properties) do
@@ -87,11 +90,31 @@ function Tiled.drawObject(o, pos)
     love.graphics.pop()
 end
 
-function Tiled.getObjectImage(o)
-
+function Tiled.getImage(o)
+    local w,h
+    if o.shape == 'polygon' then
+        o.vertices = o.vertices or Tiled.transformPolygon(o)
+        local poly = polygon(unpack(o.vertices))
+        local x1,y1,x2,y2 = poly:bbox()
+        w,h = x2-x1, y2-y1
+    else
+        w,h = o.width, o.height
+    end
+    local lw = o.properties['LineWidth'] or 0
+    local canvas = love.graphics.newCanvas(w+lw, h+lw)
+    love.graphics.clear()
+    
+    love.graphics.push()
+    if lw then love.graphics.translate(lw/2, lw/2) end
+    love.graphics.setCanvas(canvas)
+    Tiled.drawObject(o)
+    love.graphics.pop()
+    
+    love.graphics.reset()
+    return canvas
 end
 
--- MAP
+-- ENTITIES
 
 function Tiled.parseMap(map, scene)
     for i,layerData in ipairs(map.layers) do
@@ -129,7 +152,7 @@ function Tiled.objectgroup(layerData, layer, scene)
         layer:addChild(e)
         e.name = o.name
         for k,v in pairs(o.properties) do e[k] = v end
-        e.signals:emit('tiled', o)
+        if e.onTiled then e:onTiled(o) end
     end    
 end
 
