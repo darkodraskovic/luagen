@@ -20,9 +20,9 @@ end
 function Physics.onCollision(entity, other, delta)
     local phy1, phy2 = entity.physics, other.physics
     if phy1.dynamic and phy2 and phy2.dynamic then
-        entity.pos = entity.pos + delta
+        entity.pos = entity.pos + delta/2
         entity.collider:update()
-        other.pos = other.pos - delta
+        other.pos = other.pos - delta/2
         other.collider:update()
         Physics.resolveImpulse(phy1, phy2, delta)
     elseif other.collider.static then
@@ -38,7 +38,7 @@ function Physics.resolveImpulse(phy1, phy2, delta)
     local relVel = phy2.vel - phy1.vel
     local normal = -delta:normalized()
     local contactVel = relVel * normal
-    if contactVel > 0 then return end
+    if contactVel >= 0 then return end
     local e = math.min(phy1.elastic, phy2.elastic)
     local j = -(1 + e) * contactVel
     j = j / (massInv1 + massInv2)
@@ -58,11 +58,12 @@ end
 function Physics:update(dt)
     self:applyForce(self.grav)
 
-    local friction = -self.vel:clone():normalizeInplace() * self.frict
+    local velNI = -self.vel:normalized()
+    local friction = velNI * self.frict
     self:applyForce(friction)
 
     local dragMag = self.vel:len2() * self.dragFactor * self.drag
-    local drag = -self.vel:clone():normalizeInplace() * dragMag
+    local drag = velNI * dragMag
     self:applyForce(drag)
 
     self.vel = self.vel + self.acc
