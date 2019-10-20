@@ -62,8 +62,7 @@ function Collider:collide()
         local e2 = other.collider.entity
         if e2.exists and e2.parent and self.mask:find(other.collider.layer) then
             local collides, dx, dy = self.shape:collidesWith(other)
-            if dx == 0 and dy == 0 then return end
-            if collides then
+            if collides and not (dx == 0 and dy == 0) then
                 local e1 = self.entity
                 e1.signals:emit('collision', e1, e2, vector(dx, dy))
             end
