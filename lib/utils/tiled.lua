@@ -151,7 +151,15 @@ function Tiled.objectgroup(layerData, layer, scene)
         e.pos = vector(o.x, o.y)
         layer:addChild(e)
         e.name = o.name
-        for k,v in pairs(o.properties) do e[k] = v end
+        for k,v in pairs(o.properties) do
+            if k == '<>' then
+                _e = e
+                assert(loadstring(v))()
+                _e = nil
+            else
+                e[k] = v
+            end
+        end
         if e.onTiled then e:onTiled(o) end
     end    
 end
