@@ -74,5 +74,5 @@ function Physics:update(dt)
 
     self.entity.pos = self.entity.pos + self.vel * dt
 
-    self.acc = vector(0,0)
+    self.acc.x, self.acc.y = 0, 0
 end
