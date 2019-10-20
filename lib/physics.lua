@@ -26,9 +26,9 @@ end
 function Physics.onCollision(entity, other, delta)
     local phy1, phy2 = entity.physics, other.physics
     if phy1.dynamic and phy2 and phy2.dynamic then
-        entity.pos = entity.pos + delta/2
+        entity.pos = entity.pos + delta * (phy2.mass / (phy1.mass + phy2.mass))
         entity.collider:update()
-        other.pos = other.pos - delta/2
+        other.pos = other.pos - delta * (phy1.mass / (phy1.mass + phy2.mass))
         other.collider:update()
         Physics.resolveImpulse(phy1, phy2, delta)
     elseif other.collider.static then
