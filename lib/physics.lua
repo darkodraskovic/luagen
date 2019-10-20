@@ -17,6 +17,12 @@ function Physics:init()
     self.elastic = 1
 end
 
+function Physics:onAdd(register)
+    if register then
+        self.entity:registerSignal(self.entity.signals, 'collision', Physics.onCollision)
+    end
+end
+
 function Physics.onCollision(entity, other, delta)
     local phy1, phy2 = entity.physics, other.physics
     if phy1.dynamic and phy2 and phy2.dynamic then
