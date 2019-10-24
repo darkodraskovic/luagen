@@ -1,6 +1,7 @@
-Class = require 'lib.hump.class'
+local Class = require 'lib.hump.class'
+local vector = require 'lib.hump.vector'
 
-Physics = Class{
+local Physics = Class{
     type = 'physics',
 }
 
@@ -17,10 +18,11 @@ function Physics:init()
     self.elastic = 1
 end
 
-function Physics:onAdd(register)
+function Physics:onAdd(register, opts)
     if register then
         self.entity:registerSignal(self.entity.signals, 'collision', Physics.onCollision)
     end
+    self.updates = opts and opts.updates
 end
 
 function Physics.onCollision(entity, other, delta)
@@ -28,13 +30,10 @@ function Physics.onCollision(entity, other, delta)
     if phy1.dynamic and phy2 and phy2.dynamic then
         local sepInv = 1 / (phy1.mass + phy2.mass)
         entity.pos = entity.pos + delta * (phy2.mass * sepInv)
-        entity.collider:update()
         other.pos = other.pos - delta * (phy1.mass * sepInv)
-        other.collider:update()
         Physics.resolveImpulse(phy1, phy2, delta)
     elseif other.collider.static then
         entity.pos = entity.pos + delta
-        entity.collider:update()
         phy1:bounce(delta)
     end
 end
@@ -83,3 +82,5 @@ function Physics:update(dt)
 
     self.acc.x, self.acc.y = 0, 0
 end
+
+return Physics

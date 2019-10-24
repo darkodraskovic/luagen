@@ -1,7 +1,7 @@
-Class = require 'lib.hump.class'
-Signal = require 'lib.hump.signal'
+local Class = require 'lib.hump.class'
+local Signal = require 'lib.hump.signal'
 
-Signaler = Class{}
+local Signaler = Class{}
 
 function Signaler:init()
     self.signals = Signal.new()

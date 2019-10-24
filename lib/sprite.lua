@@ -1,7 +1,8 @@
-Class = require 'lib.hump.class'
-Entity = require 'lib.entity'
+local Class = require 'lib.hump.class'
+local vector = require 'lib.hump.vector'
+local Entity = require 'lib.entity'
 
-Sprite = Class{
+local Sprite = Class{
     __includes = Entity
 }
 
@@ -20,10 +21,7 @@ end
 
 function Sprite:draw()
     Entity.draw(self)
-
-    love.graphics.setColor(1,1,1,self.alpha)
     love.graphics.draw(self.img, self.transform)
-    love.graphics.setColor(1,1,1,1)
 end
 
 -- module

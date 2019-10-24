@@ -4,6 +4,7 @@ local shapes = require 'lib.HC.shapes'
 local Sprite = require 'lib.sprite'
 local resourceManager = require 'lib.resource-manager'
 local Color = require 'lib.utils.color'
+local vector = require 'lib.hump.vector'
 
 local Tiled = {}
 

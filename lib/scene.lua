@@ -1,11 +1,11 @@
-HC = require 'lib.HC'
-Class = require 'lib.hump.class'
-Signal = require 'lib.hump.signal'
-Camera = require 'lib.camera'
-Entity = require 'lib.entity'
-Timer = require 'lib.hump.timer'
+local HC = require 'lib.HC'
+local Class = require 'lib.hump.class'
+local Signal = require 'lib.hump.signal'
+local Camera = require 'lib.camera'
+local Entity = require 'lib.entity'
+local Timer = require 'lib.hump.timer'
 
-Scene = Class{}
+local Scene = Class{}
 
 function Scene:init()
     self.signals = Signal.new()
@@ -43,22 +43,19 @@ end
 
 function Scene:_addEntities()
     for i, e in ipairs(self._entitiesToAdd) do
-        e.visible = true
-        e.exists = true
+        e.exists, e.visible = true, true
+        e:updateTransform()
     end
     self._entitiesToAdd = {}
 end
 
 function Scene:removeEntity(e)
-    e.exists = false
-    e.visible = false
+    e.visible, e.exists = false, false
     table.insert(self._entitiesToRemove, e)
 end
 
 function Scene:_removeEntities()
-    for i, e in ipairs(self._entitiesToRemove) do
-        e:remove()
-    end
+    for i, e in ipairs(self._entitiesToRemove) do e:remove() end
     self._entitiesToRemove = {}   
 end
 
@@ -69,6 +66,7 @@ function Scene:update(dt)
     self:_addEntities()
     self.signals:emit('update', dt)
     self.root:update(dt)
+    self.root:updateTransformRecursive()
     self.signals:emit('collide', dt)
     self:_removeEntities()
 end

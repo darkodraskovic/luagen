@@ -1,8 +1,7 @@
-Signal = require 'lib.hump.signal'
-Spatial = require 'lib.spatial'
-Signaler = require 'lib.signaler'
+local Spatial = require 'lib.spatial'
+local Signaler = require 'lib.signaler'
 
-Entity = Class{__includes = {Spatial, Signaler}}
+local Entity = Class{__includes = {Spatial, Signaler}}
 
 function Entity:init()
     Spatial.init(self)

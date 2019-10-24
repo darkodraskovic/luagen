@@ -1,7 +1,7 @@
-Class = require 'lib.hump.class'
-vector = require 'lib.hump.vector'
+local Class = require 'lib.hump.class'
+local vector = require 'lib.hump.vector'
 
-Spatial = Class{}
+local Spatial = Class{}
 
 function Spatial:init()
     self.transform = love.math.newTransform()
@@ -25,6 +25,13 @@ function Spatial:updateTransform()
         self.transform = self.parent.transform * self.transform
     end
 end
+
+function Spatial:updateTransformRecursive()
+    self:updateTransform()
+    for i,c in ipairs(self.children) do c:updateTransformRecursive() end
+end
+
+-- globals
 
 function Spatial:position()
     local mat  = {self.transform:getMatrix()}
@@ -86,16 +93,11 @@ end
 -- update
 
 function Spatial:update(dt)
-    for i,c in ipairs(self.children) do
-        c:update(dt)
-    end
+    for i,c in ipairs(self.children) do c:update(dt) end
 end
 
 function Spatial:draw()
-    self:updateTransform()
-    for i,c in ipairs(self.children) do
-        c:draw()
-    end
+    for i,c in ipairs(self.children) do c:draw() end
 end
 
 

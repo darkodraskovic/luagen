@@ -1,8 +1,8 @@
-Class = require 'lib.hump.class'
-vector = require 'lib.hump.vector'
-shapes = require 'lib.HC.shapes'
+local Class = require 'lib.hump.class'
+local vector = require 'lib.hump.vector'
+local shapes = require 'lib.HC.shapes'
 
-Collider = Class{
+local Collider = Class{
     type = 'collider',
 }
 

@@ -1,6 +1,6 @@
 local camera = require 'lib.hump.camera'
 
-Camera = Class{}
+local Camera = Class{}
 
 function Camera:init()
     self.transform = love.math.newTransform()
@@ -21,7 +21,7 @@ end
 
 function Camera:setBbox(spatialHash)
     if self.bbox then spatialHash:remove(self.bbox) end
-    w, h = love.graphics.getDimensions()
+    local w, h = love.graphics.getDimensions()
     self.bbox = spatialHash:rectangle(-w/2, -h/2, w, h)
 end
 
