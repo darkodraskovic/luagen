@@ -28,19 +28,15 @@ function Collider:onAdd(shape, register, opts)
     shape.collider = self
     if register then self.entity.scene.collider:register(shape) end
 
-    local offset = opts and opts.offset
-    if offset then
-        if offset.x and offset.y then
-            self.offset = offset
-        else
-            self.offset = Collider.setOffset(offset)
+    -- opts
+    if opts and opts.offset then
+        if opts.offset.x and opts.offset.y then self.offset = opts.offset
+        else self.offset = Collider.setOffset(opts.offset)
         end
     end
-
-    local collide = opts and opts.collide
-    if collide then self:setCollide(opts.collide) end
-
+    if opts and opts.collides then self:setCollide(opts.collides) end
     self.static = opts and opts.static
+    self.updates = opts and opts.updates
 end
 
 function Collider:setCollide(collide, cbk)

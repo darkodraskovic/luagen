@@ -55,9 +55,7 @@ end
 
 function Entity:update(dt)
     if not self.exists then return end
-    
-    Spatial.update(self, dt)    
-    
+    Spatial.update(self, dt)
     for i,c in ipairs(self.components) do
         if c.updates then c:update(dt) end
     end
@@ -67,11 +65,7 @@ end
 
 function Entity:draw()
     if not self.visible then return end
-    
-    self:updateTransform()
-    for i,e in ipairs(self.children) do
-        e:draw()
-    end
+    Spatial.draw(self)
 end
 
 -- remove

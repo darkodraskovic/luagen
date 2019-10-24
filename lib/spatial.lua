@@ -91,6 +91,14 @@ function Spatial:update(dt)
     end
 end
 
+function Spatial:draw()
+    self:updateTransform()
+    for i,c in ipairs(self.children) do
+        c:draw()
+    end
+end
+
+
 -- remove
 
 function Spatial:remove()
