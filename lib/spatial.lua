@@ -83,6 +83,14 @@ function Spatial:findChild(k,v)
     end
 end
 
+-- update
+
+function Spatial:update(dt)
+    for i,c in ipairs(self.children) do
+        c:update(dt)
+    end
+end
+
 -- remove
 
 function Spatial:remove()
