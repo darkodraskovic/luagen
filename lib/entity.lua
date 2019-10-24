@@ -7,8 +7,6 @@ Entity = Class{__includes = {Spatial, Signaler}}
 function Entity:init()
     Spatial.init(self)
     Signaler.init(self)
-    
-    self.name = ""
     self.components = {}
 end
 
@@ -58,8 +56,10 @@ end
 function Entity:update(dt)
     if not self.exists then return end
     
-    for i,e in ipairs(self.children) do
-        e:update(dt)
+    Spatial.update(self, dt)    
+    
+    for i,c in ipairs(self.components) do
+        if c.updates then c:update(dt) end
     end
 end
 
@@ -75,10 +75,6 @@ function Entity:draw()
 end
 
 -- remove
-
-function Entity:removeDeferred()
-    self.scene:removeEntity(self)
-end
 
 function Entity:remove()
     Spatial.remove(self)
