@@ -150,7 +150,7 @@ function Tiled.objectgroup(layerData, layer, scene)
         local e = scene:addEntity(_G[o.type], o)
         e.pos = vector(o.x, o.y)
         layer:addChild(e)
-        e.name = o.name
+        if string.len(o.name) > 0 then e.name = o.name end
         for k,v in pairs(o.properties) do
             if k == '<>' then
                 _e = e
