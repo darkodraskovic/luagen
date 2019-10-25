@@ -18,7 +18,7 @@ function Physics:init()
     self.elastic = 1
 end
 
-function Physics:onAdd(collides)
+function Physics:add(collides)
     self.entity:registerSignal(self.entity.scene.signals,
         'update-physics', function(dt) self:update(dt) end)
     if collides then

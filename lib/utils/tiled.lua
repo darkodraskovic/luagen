@@ -161,7 +161,7 @@ function Tiled.objectgroup(layerData, layer, scene)
                 e[k] = v
             end
         end
-        if e.onTiled then e:onTiled(o) end
+        if e.tiled then e:tiled(o) end
     end    
 end
 

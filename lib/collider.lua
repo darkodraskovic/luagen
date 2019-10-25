@@ -19,7 +19,7 @@ function Collider:init()
     self.mask = 'a'
 end
 
-function Collider:onAdd(shape, register, opts)
+function Collider:add(shape, register, opts)
     if self.shape then
         if self.shape == shape then return end
         self.entity.scene.collider:remove(self.shape)

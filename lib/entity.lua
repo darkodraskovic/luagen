@@ -9,7 +9,7 @@ function Entity:init()
     self.components = {}
 end
 
-function Entity:onEnter()
+function Entity:enter()
     self:updateTransform()
     if self.collider then self.collider:update() end
 end
@@ -34,7 +34,7 @@ function Entity:addComponent(type, ...)
     table.insert(self.components, c)
     c.entity = self
     self[type.type] = c
-    if c.onAdd then c:onAdd(...) end
+    if c.add then c:add(...) end
     return c
 end
 

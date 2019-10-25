@@ -37,14 +37,14 @@ function Scene:addEntity(type, ...)
     local e = (type and type()) or Entity()
     e.scene = self
     table.insert(self._entitiesToAdd, e)
-    if e.onAdd then e:onAdd(...) end
+    if e.add then e:add(...) end
     return e
 end
 
 function Scene:_addEntities()
     for i, e in ipairs(self._entitiesToAdd) do
         e.exists, e.visible = true, true
-        e:onEnter()
+        e:enter()
     end
     self._entitiesToAdd = {}
 end

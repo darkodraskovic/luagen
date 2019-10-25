@@ -1,9 +1,9 @@
-lu = require 'luaunit.luaunit'
-love = require 'love_mocks'
-Class = require 'lib.hump.class'
-Scene = require 'lib.scene'
-Spatial = require 'lib.spatial'
-Entity = require 'lib.entity'
+local lu = require 'luaunit.luaunit'
+local love = require 'love_mocks'
+local Class = require 'lib.hump.class'
+local Scene = require 'lib.scene'
+local Spatial = require 'lib.spatial'
+local Entity = require 'lib.entity'
 
 unpack = unpack or table.unpack
 
