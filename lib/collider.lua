@@ -20,13 +20,14 @@ function Collider:init()
 end
 
 function Collider:add(shape, register, opts)
+    local e = self.entity
     if self.shape then
         if self.shape == shape then return end
-        self.entity.scene.collider:remove(self.shape)
+        e.scene.collider:remove(self.shape)
     end
     self.shape = shape
     shape.collider = self
-    if register then self.entity.scene.collider:register(shape) end
+    if register then e.scene.collider:register(shape) end
 
     if opts then
         if opts.offset then
@@ -34,26 +35,14 @@ function Collider:add(shape, register, opts)
             else self.offset = Collider.setOffset(opts.offset)
             end
         end
-        if opts.collides then self:setCollide(opts.collides) end
-        self.static = opts and opts.static
-        if opts.updates then
-            self.entity:registerSignal(
-                self.entity.scene.signals,
-                'update-collision', function() self:update() end)
+        if opts.collides then
+            e:registerSignal(e.scene.signals, 'collide', function () self:collide() end)
         end
-    end
-end
-
-function Collider:setCollide(collide, cbk)
-    local e = self.entity
-    if (collide) then
-        self.collisionSig = e:registerSignal(
-            e.signals, 'collision', e.cbk or e['onCollision'])
-        self.collideSig = e:registerSignal(
-            e.scene.signals, 'collide', function () self:collide() end)
-    else
-        e:removeSignal(self.collisionSig)
-        e:removeSignal(self.collideSig)
+        self.static = opts.static
+        if opts.updates then
+            e:registerSignal(
+                e.scene.signals, 'update-collider', function() self:update() end)
+        end
     end
 end
 
@@ -65,7 +54,7 @@ function Collider:collide()
             local collides, dx, dy = self.shape:collidesWith(other)
             if collides and not (dx == 0 and dy == 0) then
                 local e1 = self.entity
-                e1.signals:emit('collision', e1, e2, vector(dx, dy))
+                e1.signals:emit('collide', e1, e2, vector(dx, dy))
             end
         end
     end

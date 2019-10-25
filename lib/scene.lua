@@ -67,7 +67,7 @@ function Scene:update(dt)
     self.root:update(dt)
     self.signals:emit('update-physics', dt)
     self.root:updateTransformRecursive()
-    self.signals:emit('update-collision', dt)
+    self.signals:emit('update-collider', dt)
     self.signals:emit('collide', dt)
     self:_removeEntities()
 end

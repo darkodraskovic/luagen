@@ -22,11 +22,11 @@ function Physics:add(collides)
     self.entity:registerSignal(self.entity.scene.signals,
         'update-physics', function(dt) self:update(dt) end)
     if collides then
-        self.entity:registerSignal(self.entity.signals, 'collision', Physics.onCollision)
+        self.entity:registerSignal(self.entity.signals, 'collide', Physics.collide)
     end
 end
 
-function Physics.onCollision(entity, other, delta)
+function Physics.collide(entity, other, delta)
     local phy1, phy2 = entity.physics, other.physics
     if phy1.dynamic and phy2 and phy2.dynamic then
         local sepInv = 1 / (phy1.mass + phy2.mass)

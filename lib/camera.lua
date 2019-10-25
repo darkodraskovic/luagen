@@ -15,7 +15,7 @@ function Camera:updateTransform()
 end
 
 function Camera:updateBbox()
-    self.bbox:moveTo(self.viewport:position());
+    self.bbox:moveTo(self.viewport:position())
     self.bbox:setRotation(self.viewport.rot)
 end
 
