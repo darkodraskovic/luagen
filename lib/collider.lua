@@ -28,15 +28,20 @@ function Collider:onAdd(shape, register, opts)
     shape.collider = self
     if register then self.entity.scene.collider:register(shape) end
 
-    -- opts
-    if opts and opts.offset then
-        if opts.offset.x and opts.offset.y then self.offset = opts.offset
-        else self.offset = Collider.setOffset(opts.offset)
+    if opts then
+        if opts.offset then
+            if opts.offset.x and opts.offset.y then self.offset = opts.offset
+            else self.offset = Collider.setOffset(opts.offset)
+            end
+        end
+        if opts.collides then self:setCollide(opts.collides) end
+        self.static = opts and opts.static
+        if opts.updates then
+            self.entity:registerSignal(
+                self.entity.scene.signals,
+                'update-collision', function() self:update() end)
         end
     end
-    if opts and opts.collides then self:setCollide(opts.collides) end
-    self.static = opts and opts.static
-    self.updates = opts and opts.updates
 end
 
 function Collider:setCollide(collide, cbk)
@@ -67,7 +72,6 @@ function Collider:collide()
 end
 
 function Collider:update()
-    self.entity:updateTransform()
     self.shape:moveTo(self.entity:center())
     if self.offset then
         self.offset:rotateInplace(self.entity.rot - self.shape:rotation())

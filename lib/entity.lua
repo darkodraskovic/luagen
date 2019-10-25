@@ -9,6 +9,11 @@ function Entity:init()
     self.components = {}
 end
 
+function Entity:onEnter()
+    self:updateTransform()
+    if self.collider then self.collider:update() end
+end
+
 -- bbox
 
 function Entity:updateBbox()
@@ -55,9 +60,6 @@ end
 function Entity:update(dt)
     if not self.exists then return end
     Spatial.update(self, dt)
-    for i,c in ipairs(self.components) do
-        if c.updates then c:update(dt) end
-    end
 end
 
 -- draw

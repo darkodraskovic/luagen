@@ -44,7 +44,7 @@ end
 function Scene:_addEntities()
     for i, e in ipairs(self._entitiesToAdd) do
         e.exists, e.visible = true, true
-        e:updateTransform()
+        e:onEnter()
     end
     self._entitiesToAdd = {}
 end
@@ -64,9 +64,10 @@ end
 function Scene:update(dt)
     self.timer:update(dt)
     self:_addEntities()
-    self.signals:emit('update', dt)
     self.root:update(dt)
+    self.signals:emit('update-physics', dt)
     self.root:updateTransformRecursive()
+    self.signals:emit('update-collision', dt)
     self.signals:emit('collide', dt)
     self:_removeEntities()
 end
@@ -76,7 +77,6 @@ end
 function Scene:draw()
     self.camera:updateBbox()
     self.viewport:attach()
-    self.signals:emit('draw', dt)
     self.root:draw()
     self.viewport:detach()
 end
