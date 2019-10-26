@@ -6,6 +6,8 @@ local Collider = Class{
     type = 'collider',
 }
 
+-- utils
+
 function Collider.setOffset(vertices)
     local poly = shapes.newPolygonShape(unpack(vertices))
     local x1,y1,x2,y2 = poly:bbox()
@@ -13,6 +15,12 @@ function Collider.setOffset(vertices)
     local cx,cy = poly:center()
     return vector(cx-bx,cy-by)
 end
+
+function Collider:mouseover(x, y)
+    return self.shape:contains(self.entity.scene.viewport:mousePosition())
+end
+
+-- init
 
 function Collider:init()
     self.layer = 'a'
@@ -40,11 +48,12 @@ function Collider:add(shape, register, opts)
         end
         self.static = opts.static
         if opts.updates then
-            e:registerSignal(
-                e.scene.signals, 'update-collider', function() self:update() end)
+            e:registerSignal(e.scene.signals, 'update-collider', function() self:update() end)
         end
     end
 end
+
+-- collide & update
 
 function Collider:collide()
     local candidates = self.entity.scene.collider:neighbors(self.shape)
@@ -72,6 +81,8 @@ end
 function Collider:setScale(s)
     self.shape:scale(s)
 end
+
+-- remove
 
 function Collider:remove()
     self.entity.scene.collider:remove(self.shape)

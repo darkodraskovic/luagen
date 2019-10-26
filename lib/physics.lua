@@ -19,11 +19,9 @@ function Physics:init()
 end
 
 function Physics:add(collides)
-    self.entity:registerSignal(self.entity.scene.signals,
-        'update-physics', function(dt) self:update(dt) end)
-    if collides then
-        self.entity:registerSignal(self.entity.signals, 'collide', Physics.collide)
-    end
+    local e = self.entity
+    e:registerSignal(e.scene.signals, 'update-physics', function(dt) self:update(dt) end)
+    if collides then e:registerSignal(e.signals, 'collide', Physics.collide) end
 end
 
 function Physics.collide(entity, other, delta)
