@@ -3,7 +3,7 @@ local shapes = require 'lib.HC.shapes'
 local Class = require 'lib.hump.class'
 local vector = require 'lib.hump.vector'
 
-local resourceManager = require 'lib.core.resource-manager'
+local resources = require 'lib.core.resources'
 local Sprite = require 'lib.core.sprite'
 local Color = require 'lib.util.color'
 
@@ -116,7 +116,7 @@ function Tiled.getImage(o)
     return canvas
 end
 
--- ENTITIES
+-- MAP
 
 function Tiled.parseMap(map, scene, root)
     root = root or scene.root
@@ -136,7 +136,7 @@ end
 
 function Tiled.imagelayer(layerData, layer, scene)
     local s = scene:addEntity(Sprite)
-    local img = resourceManager:getImage(layerData.image)
+    local img = resources.images[layerData.image]
     s:setImage(img)
     layer:addChild(s)
 end
