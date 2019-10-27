@@ -1,4 +1,5 @@
 local camera = require 'lib.hump.camera'
+local Class = require 'lib.hump.class'
 
 local Camera = Class{}
 

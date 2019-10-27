@@ -1,5 +1,7 @@
-local Spatial = require 'lib.spatial'
-local Signaler = require 'lib.signaler'
+local Class = require 'lib.hump.class'
+
+local Spatial = require 'lib.core.spatial'
+local Signaler = require 'lib.core.signaler'
 
 local Entity = Class{__includes = {Spatial, Signaler}}
 

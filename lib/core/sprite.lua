@@ -1,6 +1,7 @@
 local Class = require 'lib.hump.class'
 local vector = require 'lib.hump.vector'
-local Entity = require 'lib.entity'
+
+local Entity = require 'lib.core.entity'
 
 local Sprite = Class{
     __includes = Entity

@@ -1,9 +1,10 @@
 local HC = require 'lib.HC'
 local Class = require 'lib.hump.class'
 local Signal = require 'lib.hump.signal'
-local Camera = require 'lib.camera'
-local Entity = require 'lib.entity'
 local Timer = require 'lib.hump.timer'
+
+local Camera = require 'lib.core.camera'
+local Entity = require 'lib.core.entity'
 
 local Scene = Class{}
 
