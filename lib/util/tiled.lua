@@ -142,28 +142,33 @@ function Tiled.imagelayer(layerData, layer, scene)
 end
 
 function Tiled.objectgroup(layerData, layer, scene)
+    local edir = layerData.properties.edir or 'entity'
+    local cdir = layerData.properties.cdir or 'component'
+    
     for i,o in ipairs(layerData.objects) do
-        local dir = layerData.properties.dir or 'entity'
-        if not _G[o.type] then require(dir .. '.' .. o.type:lower()) end
         local o = Class.clone(o)
         if o.shape == 'polygon' then
             local dx, dy
             o.vertices, dx, dy = Tiled.transformPolygon(o)
             o.x = o.x + dx; o.y = o.y + dy
         end
-        local e = scene:addEntity(_G[o.type], o)
+        
+        local e = scene:addEntity(require(edir .. '.' .. o.type:lower()), o)
         e.pos = vector(o.x, o.y)
         layer:addChild(e)
-        if string.len(o.name) > 0 then e.name = o.name end
-        for k,v in pairs(o.properties) do
-            if k == '<>' then
-                _e = e
-                assert(loadstring(v))()
-                _e = nil
-            else
-                e[k] = v
-            end
+
+        for component in string.gmatch(o.properties.components or "", "[^,]+") do
+            e:addComponent(require(cdir .. '.' .. component:lower()))
         end
+        
+        if string.len(o.name) > 0 then e.name = o.name end
+        for k,v in pairs(o.properties) do e.properties[k] = v end
+        if e.properties['<>'] then
+            _e = e
+            assert(loadstring(o.properties['<>']))()
+            _e = nil
+        end
+        
         if e.tiled then e:tiled(o) end
     end    
 end

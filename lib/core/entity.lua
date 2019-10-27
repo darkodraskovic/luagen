@@ -9,6 +9,7 @@ function Entity:init()
     Spatial.init(self)
     Signaler.init(self)
     self.components = {}
+    self.properties = {}
 end
 
 function Entity:enter()
@@ -51,7 +52,7 @@ function Entity:removeComponent(c)
 end
 
 function Entity:removeComponents()
-    for _, c in pairs(self.components) do
+    for _, c in ipairs(self.components) do
         if c.remove then c:remove() end
     end
     self.components = {}
