@@ -29,6 +29,8 @@ end
 
 function Collider:add(shape, register, opts)
     local e = self.entity
+    e.collider = self
+    
     if self.shape then
         if self.shape == shape then return end
         e.scene.collider:remove(self.shape)
@@ -82,17 +84,20 @@ function Collider:setScale(s)
     self.shape:scale(s)
 end
 
--- remove
-
-function Collider:remove()
-    self.entity.scene.collider:remove(self.shape)
-end
+-- debug
 
 function Collider:draw()
     r,g,b,a = love.graphics.getColor()
     love.graphics.setColor(0, 1, 0, 0.5)
     self.shape:draw('line')
     love.graphics.setColor(r,g,b,a)
+end
+
+-- remove
+
+function Collider:remove()
+    self.entity.scene.collider:remove(self.shape)
+    self.entity.collider = nil
 end
 
 return Collider

@@ -34,25 +34,19 @@ end
 
 function Entity:addComponent(type, ...)
     local c = type()
-    table.insert(self.components, c)
     c.entity = self
-    self[type.type] = c
+    self.components[c.type] = c
     if c.add then c:add(...) end
     return c
 end
 
 function Entity:removeComponent(c)
     if c.remove then c:remove() end
-    for i,v in ipairs(self.components) do
-        if c == v then
-            table.remove(self.components, i)
-            break
-        end
-    end
+    self.components[c.type] = nil
 end
 
 function Entity:removeComponents()
-    for _, c in ipairs(self.components) do
+    for _, c in pairs(self.components) do
         if c.remove then c:remove() end
     end
     self.components = {}
