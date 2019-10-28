@@ -46,11 +46,11 @@ function Collider:add(shape, register, opts)
             end
         end
         if opts.collides then
-            e:registerSignal(e.scene.signals, 'collide', function () self:collide() end)
+            e:register(e.scene.signals, 'collide', function () self:collide() end)
         end
         self.static = opts.static
         if opts.updates then
-            e:registerSignal(e.scene.signals, 'update-collider', function() self:update() end)
+            e:register(e.scene.signals, 'update-collider', function() self:update() end)
         end
     end
 end

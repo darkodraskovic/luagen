@@ -10,14 +10,14 @@ end
 
 -- signals
 
-function Signaler:registerSignal(reg, sig, f)
+function Signaler:register(reg, sig, f)
     self.observers[reg] = self.observers[reg] or {}
     self.observers[reg][sig] =  self.observers[reg][sig] or {}
     table.insert(self.observers[reg][sig], f)
     return reg:register(sig, f)
 end
 
-function Signaler:removeSignal(handle)
+function Signaler:unregister(handle)
     for reg, sigs in pairs(self.observers) do
         for sig, fs in pairs(sigs) do
             for i, f in ipairs(fs) do
