@@ -9,7 +9,7 @@ function Entity:init()
     Spatial.init(self)
     Signaler.init(self)
     self.components = {}
-    self.properties = {}
+    self.properties = {} -- user defined properties
 end
 
 function Entity:enter()
@@ -45,36 +45,25 @@ function Entity:removeComponent(c)
     self.components[c.type] = nil
 end
 
-function Entity:removeComponents()
-    for _, c in pairs(self.components) do
-        if c.remove then c:remove() end
-    end
-    self.components = {}
-end
-
--- update
+-- update & draw
 
 function Entity:update(dt)
     if not self.exists then return end
     Spatial.update(self, dt)
 end
 
--- draw
-
 function Entity:draw()
     if not self.visible then return end
     Spatial.draw(self)
 end
 
--- remove
+-- remove & module
 
 function Entity:remove()
+    for _, c in pairs(self.components) do self:removeComponent(c) end
     Spatial.remove(self)
     Signaler.remove(self)
-    
     if self.bbox then self.scene.spaceHash:remove(self.bbox) end
-        
-    self:removeComponents()
 end
 
 return Entity

@@ -5,7 +5,11 @@ local vector = require 'lib.hump.vector'
 
 local resources = require 'lib.core.resources'
 local Sprite = require 'lib.core.sprite'
-local Color = require 'lib.util.color'
+
+local hex2rgb = function(hex)
+    hex = hex:gsub("#","")
+    return tonumber("0x"..hex:sub(3,4))/255, tonumber("0x"..hex:sub(5,6))/255, tonumber("0x"..hex:sub(7,8))/255, tonumber("0x"..hex:sub(1,2))/255
+end
 
 local Tiled = {}
 
@@ -57,11 +61,11 @@ end
 function Tiled._drawObject(o, ...)
     local fill, line = o.properties.fill, o.properties.line
     if fill then
-        love.graphics.setColor(unpack(Color.hex2rgb(fill, true)))
+        love.graphics.setColor(hex2rgb(fill))
         love.graphics[o.shape]('fill',...)
     end
     if line then
-        love.graphics.setColor(unpack(Color.hex2rgb(line, true)))
+        love.graphics.setColor(hex2rgb(line))
         love.graphics[o.shape]('line',...)
     end
 end
