@@ -17,19 +17,6 @@ function Entity:enter()
     if self.collider then self.collider:update() end
 end
 
--- bbox
-
-function Entity:updateBbox()
-    self.bbox:moveTo(self:center());
-    self.bbox:setRotation(self:rotation())
-end
-
-function Entity:onScreen()
-    if not self.bbox then return end
-    self:updateBbox()
-    return self.bbox:collidesWith(self.scene.camera.bbox)
-end
-
 -- components
 
 function Entity:addComponent(type, opt)
@@ -65,7 +52,6 @@ function Entity:remove()
     for _, c in pairs(self.components) do self:removeComponent(c) end
     Spatial.remove(self)
     Signaler.remove(self)
-    if self.bbox then self.scene.spaceHash:remove(self.bbox) end
 end
 
 return Entity

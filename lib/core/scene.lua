@@ -3,14 +3,13 @@ local Class = require 'lib.hump.class'
 local Signal = require 'lib.hump.signal'
 local Timer = require 'lib.hump.timer'
 
-local Camera = require 'lib.core.camera'
+local Camera = require 'lib.hump.camera'
 local Entity = require 'lib.core.entity'
 
 local Scene = Class{}
 
 function Scene:init()
     self.signals = Signal.new()
-    self.spaceHash = HC.new(150)    
     self.collider = HC.new(150)
     self.timer = Timer.new()
         
@@ -20,16 +19,7 @@ function Scene:init()
     self._entitiesToAdd = {}
     self._entitiesToRemove = {}
 
-    self:_addCamera()
-end
-
--- camera
-
-function Scene:_addCamera()
     self.camera = Camera()
-    self.viewport = self.camera.viewport
-    self.camera.scene = self
-    self.camera:setBbox(self.spaceHash)
 end
 
 -- entities
@@ -77,10 +67,9 @@ end
 -- draw
 
 function Scene:draw()
-    self.camera:updateBbox()
-    self.viewport:attach()
+    self.camera:attach()
     self.root:draw()
-    self.viewport:detach()
+    self.camera:detach()
 end
 
 -- remove
@@ -92,7 +81,6 @@ function Scene:remove()
     self._entitiesToRemove = {}
     
     self.signals:clearPattern('.*')
-    self.spaceHash:resetHash()
     self.collider:resetHash()
     self.timer:clear()
 end

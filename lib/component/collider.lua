@@ -15,7 +15,7 @@ function Collider.setOffset(vertices)
 end
 
 function Collider:mouseover(x, y)
-    return self.shape:contains(self.entity.scene.viewport:mousePosition())
+    return self.shape:contains(self.entity.scene.camera:mousePosition())
 end
 
 -- init

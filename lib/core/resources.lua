@@ -1,3 +1,1 @@
-local resources = {images = {}, sounds = {} , fonts = {}}
-
-return resources
+return {images = {}, sounds = {} , fonts = {}}

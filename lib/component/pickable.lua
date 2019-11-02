@@ -16,18 +16,18 @@ function Pickable:add()
 end
 
 function Pickable:isDown(button, ...)
-    return self.over and love.mouse.isDown(button, ...), self.entity.scene.viewport:mousePosition()
+    return self.over and love.mouse.isDown(button, ...), self.entity.scene.camera:mousePosition()
 end
 
 function Pickable:mousepressed(x, y, button)
     local e = self.entity
-    x, y = e.scene.viewport:mousePosition()
+    x, y = e.scene.camera:mousePosition()
     if self.over then e.signals:emit('mousepressed', e, x, y, button) end
 end
 
 function Pickable:mousereleased(x, y, button)
     local e = self.entity
-    x, y = e.scene.viewport:mousePosition()
+    x, y = e.scene.camera:mousePosition()
     if self.over then e.signals:emit('mousereleased', e, x, y, button) end
 end
 
@@ -36,13 +36,13 @@ function Pickable:update()
     if e.collider:mouseover() then
         self.over = true
         if not self._wasOver then
-            e.signals:emit('mouseenter', e, e.scene.viewport:mousePosition())
+            e.signals:emit('mouseenter', e, e.scene.camera:mousePosition())
             self._wasOver = true
         end
     else
         self.over = false
         if self._wasOver then
-            e.signals:emit('mouseleave', e, e.scene.viewport:mousePosition())
+            e.signals:emit('mouseleave', e, e.scene.camera:mousePosition())
             self._wasOver = false
         end
     end
