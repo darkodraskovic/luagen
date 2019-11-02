@@ -45,13 +45,13 @@ function Collider:add(shape, register, opts)
             else self.offset = Collider.setOffset(opts.offset)
             end
         end
-        if opts.collides then
-            e:register(e.scene.signals, 'collide', function () self:collide() end)
-        end
-        self.static = opts.static
+        self.static = opts.static        
         if opts.updates then
             e:register(e.scene.signals, 'update-collider', function() self:update() end)
         end
+        if opts.collides then
+            e:register(e.scene.signals, 'collide', function () self:collide() end)
+        end        
     end
 end
 
