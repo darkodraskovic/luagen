@@ -49,11 +49,13 @@ end
 
 function Entity:update(dt)
     if not self.exists then return end
+    self.signals:emit('update-component', dt)
     Spatial.update(self, dt)
 end
 
 function Entity:draw()
     if not self.visible then return end
+    self:emit('draw-component', dt)
     Spatial.draw(self)
 end
 

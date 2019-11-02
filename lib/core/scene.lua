@@ -35,6 +35,7 @@ end
 -- entities
 
 function Scene:addEntity(type, opt)
+    type = type or Entity
     local e = (type and type()) or Entity()
     e.scene = self
     table.insert(self._entitiesToAdd, e)
@@ -66,7 +67,6 @@ function Scene:update(dt)
     self.timer:update(dt)
     self:_addEntities()
     self.root:update(dt)
-    self.signals:emit('update-component', dt)
     self.signals:emit('update-physics', dt)
     self.root:updateTransformRecursive()
     self.signals:emit('update-collider', dt)
@@ -80,7 +80,6 @@ function Scene:draw()
     self.camera:updateBbox()
     self.viewport:attach()
     self.root:draw()
-    self.signals:emit('draw-component', dt)
     self.viewport:detach()
 end
 

@@ -4,7 +4,7 @@ local Class = require 'lib.hump.class'
 local vector = require 'lib.hump.vector'
 
 local resources = require 'lib.core.resources'
-local Sprite = require 'lib.core.sprite'
+local Drawable = require 'lib.component.drawable'
 
 local hex2rgb = function(hex)
     hex = hex:gsub("#","")
@@ -139,10 +139,9 @@ function Tiled.parseMap(map, scene, root)
 end
 
 function Tiled.imagelayer(layerData, layer, scene)
-    local s = scene:addEntity(Sprite)
-    local img = resources.images[layerData.image]
-    s:setImage(img)
-    layer:addChild(s)
+    local img = scene:addEntity()
+    img:addComponent(Drawable, {drawable = resources.images[layerData.image]})
+    layer:addChild(img)
 end
 
 function Tiled.objectgroup(layerData, layer, scene)
@@ -157,7 +156,7 @@ function Tiled.objectgroup(layerData, layer, scene)
             o.x = o.x + dx; o.y = o.y + dy
         end
         
-        local e = scene:addEntity(require(edir .. '.' .. o.type:lower()), o, o.properties)
+        local e = scene:addEntity(require(edir .. '.' .. o.type:lower()), o)
         e.pos = vector(o.x, o.y)
         layer:addChild(e)
 
