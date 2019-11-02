@@ -9,7 +9,6 @@ local Sprite = Class{
 
 function Sprite:init()
     Entity.init(self)
-    self.alpha = 1
 end
 
 function Sprite:setImage(img)

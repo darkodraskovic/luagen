@@ -157,7 +157,7 @@ function Tiled.objectgroup(layerData, layer, scene)
             o.x = o.x + dx; o.y = o.y + dy
         end
         
-        local e = scene:addEntity(require(edir .. '.' .. o.type:lower()), o)
+        local e = scene:addEntity(require(edir .. '.' .. o.type:lower()), o, o.properties)
         e.pos = vector(o.x, o.y)
         layer:addChild(e)
 
