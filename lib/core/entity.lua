@@ -32,11 +32,11 @@ end
 
 -- components
 
-function Entity:addComponent(type, ...)
+function Entity:addComponent(type, opt)
     local c = type()
     c.entity = self
     self.components[c.type] = c
-    if c.add then c:add(...) end
+    if c.add then c:add(opt) end
     return c
 end
 

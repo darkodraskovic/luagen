@@ -18,12 +18,12 @@ function Physics:init()
     self.elastic = 1
 end
 
-function Physics:add(collides)
+function Physics:add(opt)
     local e = self.entity
     e.physics = self
     
     e:register(e.scene.signals, 'update-physics', function(dt) self:update(dt) end)
-    if collides then e:register(e.signals, 'collide', Physics.collide) end
+    if opt.collides then e:register(e.signals, 'collide', Physics.collide) end
 end
 
 function Physics.collide(entity, other, delta)

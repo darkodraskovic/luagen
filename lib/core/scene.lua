@@ -34,11 +34,11 @@ end
 
 -- entities
 
-function Scene:addEntity(type, ...)
+function Scene:addEntity(type, opt)
     local e = (type and type()) or Entity()
     e.scene = self
     table.insert(self._entitiesToAdd, e)
-    if e.add then e:add(...) end
+    if e.add then e:add(opt) end
     return e
 end
 

@@ -2,9 +2,7 @@ local Class = require 'lib.hump.class'
 local vector = require 'lib.hump.vector'
 local shapes = require 'lib.HC.shapes'
 
-local Collider = Class{
-    type = 'collider',
-}
+local Collider = Class{ type = 'collider' }
 
 -- utils
 
@@ -23,36 +21,31 @@ end
 -- init
 
 function Collider:init()
-    self.layer = 'a'
-    self.mask = 'a'
+    self.layer = 'a'; self.mask = 'a'
 end
 
-function Collider:add(shape, register, opts)
+function Collider:add(opt)
     local e = self.entity
     e.collider = self
     
-    if self.shape then
-        if self.shape == shape then return end
-        e.scene.collider:remove(self.shape)
-    end
-    self.shape = shape
-    shape.collider = self
-    if register then e.scene.collider:register(shape) end
-
-    if opts then
-        if opts.offset then
-            if opts.offset.x and opts.offset.y then self.offset = opts.offset
-            else self.offset = Collider.setOffset(opts.offset)
-            end
+    if not opt then return end
+    
+    self.shape = opt.shape; opt.shape.collider = self
+    if opt.register then e.scene.collider:register(self.shape) end
+    self.static = opt.static
+    
+    local offset = opt.offset
+    if offset then
+        if offset.x and offset.y then self.offset = offset
+        else self.offset = Collider.setOffset(offset)
         end
-        self.static = opts.static        
-        if opts.updates then
-            e:register(e.scene.signals, 'update-collider', function() self:update() end)
-        end
-        if opts.collides then
-            e:register(e.scene.signals, 'collide', function () self:collide() end)
-        end        
     end
+    if opt.updates then
+        e:register(e.scene.signals, 'update-collider', function() self:update() end)
+    end
+    if opt.collides then
+        e:register(e.scene.signals, 'collide', function () self:collide() end)
+    end        
 end
 
 -- collide & update
