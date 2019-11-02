@@ -11,6 +11,7 @@ end
 -- signals
 
 function Signaler:register(reg, sig, f)
+    if type(reg) == 'string' then f = sig; sig = reg; reg = self.signals end
     self.observers[reg] = self.observers[reg] or {}
     self.observers[reg][sig] =  self.observers[reg][sig] or {}
     table.insert(self.observers[reg][sig], f)
@@ -29,6 +30,11 @@ function Signaler:unregister(handle)
             end
         end
     end
+end
+
+function Signaler:emit(reg, sig, f, ...)
+    if type(reg) == 'string' then f = sig; sig = reg; reg = self.signals end
+    reg:emit(sig, f, ...)
 end
 
 -- remove
