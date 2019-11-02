@@ -80,6 +80,7 @@ function Scene:draw()
     self.camera:updateBbox()
     self.viewport:attach()
     self.root:draw()
+    self.signals:emit('draw-component', dt)
     self.viewport:detach()
 end
 
