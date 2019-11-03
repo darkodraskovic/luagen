@@ -48,4 +48,8 @@ function Pickable:update()
     end
 end
 
+function Pickable:remove()
+    self.entity.pickable = nil
+end
+
 return Pickable

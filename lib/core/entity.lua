@@ -12,7 +12,7 @@ function Entity:init()
     self.properties = {} -- user defined properties
 end
 
-function Entity:enter()
+function Entity:enter() -- on scene enter
     self:updateTransform()
     if self.collider then self.collider:update() end
 end
@@ -23,7 +23,7 @@ function Entity:addComponent(type, opt)
     local c = type()
     c.entity = self
     self.components[c.type] = c
-    if c.add then c:add(opt) end
+    if c.add then c:add(opt) end  -- c is aware of entity now
     return c
 end
 

@@ -9,7 +9,7 @@ function Spatial:init()
     self.rot = 0
     self.scale = vector(1,1)
     self.size = vector(0,0)
-    self.anchor = vector(0,0)
+    self.offset = vector(0,0)
     
     self.parent = nil
     self.children = {}
@@ -20,7 +20,7 @@ end
 function Spatial:updateTransform()
     self.transform:setTransformation(
         self.pos.x, self.pos.y, self.rot, self.scale.x, self.scale.y,
-        self.anchor.x * self.size.x, self.anchor.y * self.size.y)
+        self.offset.x * self.size.x, self.offset.y * self.size.y)
     if self.parent then
         self.transform = self.parent.transform * self.transform
     end
@@ -47,7 +47,7 @@ function Spatial:center()
     return self.transform:transformPoint(self.size.x/2, self.size.y/2)
 end
 
--- children
+-- add & remove children
 
 function Spatial:addChild(c)
     if c.parent then c.parent:removeChild(c) end
@@ -70,6 +70,8 @@ function Spatial:removeChildren()
     self.children = {}
 end
 
+-- get & find children
+
 function Spatial:_getChildren(children)
     if #self.children < 1 then return end
     for i, c in ipairs(self.children) do
@@ -90,7 +92,7 @@ function Spatial:findChild(k,v)
     end
 end
 
--- update
+-- update & draw
 
 function Spatial:update(dt)
     for i,c in ipairs(self.children) do c:update(dt) end
@@ -100,16 +102,13 @@ function Spatial:draw()
     for i,c in ipairs(self.children) do c:draw() end
 end
 
-
 -- remove
 
 function Spatial:remove()
-    local parent = self.parent
     if self.parent then self.parent:removeChild(self) end
-    for i,c in ipairs({unpack(self.children)}) do
-        self:removeChildren() -- children don't call self.parent:removeChild(self)
-        c:remove() -- tree traversal
-    end
+    local children = self.children -- removeChildren() removes ref to children
+    self:removeChildren()
+    for i,c in ipairs(children) do c:remove() end
 end
 
 return Spatial

@@ -6,7 +6,7 @@ local Collider = Class{ type = 'collider' }
 
 -- utils
 
-function Collider.setOffset(vertices)
+function Collider.getOffset(vertices)
     local poly = shapes.newPolygonShape(unpack(vertices))
     local x1,y1,x2,y2 = poly:bbox()
     local bx,by = (x2-x1)/2, (y2-y1)/2
@@ -14,14 +14,14 @@ function Collider.setOffset(vertices)
     return vector(cx-bx,cy-by)
 end
 
-function Collider:mouseover(x, y)
+function Collider:mouseover()
     return self.shape:contains(self.entity.scene.camera:mousePosition())
 end
 
 -- init
 
 function Collider:init()
-    self.layer = 'a'; self.mask = 'a'
+    self.layer, self.mask = 'a', 'a'
 end
 
 function Collider:add(opt)
@@ -32,17 +32,20 @@ function Collider:add(opt)
     
     self.shape = opt.shape; opt.shape.collider = self
     if opt.register then e.scene.collider:register(self.shape) end
+    
     self.static = opt.static
     
     local offset = opt.offset
     if offset then
         if offset.x and offset.y then self.offset = offset
-        else self.offset = Collider.setOffset(offset)
+        else self.offset = Collider.getOffset(offset)
         end
     end
+    
     if opt.updates then
         e:register(e.scene.signals, 'update-collider', function() self:update() end)
     end
+    
     if opt.collides then
         e:register(e.scene.signals, 'collide', function () self:collide() end)
     end        
@@ -67,21 +70,18 @@ end
 function Collider:update()
     self.shape:moveTo(self.entity:center())
     if self.offset then
-        self.offset:rotateInplace(self.entity.rot - self.shape:rotation())
+        self.offset:rotateInplace(self.entity:rotation() - self.shape:rotation())
         self.shape:move(self.offset:unpack())
     end
     self.shape:setRotation(self.entity:rotation())
 end
 
-function Collider:setScale(s)
-    self.shape:scale(s)
-end
-
 -- debug
 
-function Collider:draw()
+function Collider:draw(color, lineWidth)
     r,g,b,a = love.graphics.getColor()
-    love.graphics.setColor(0, 1, 0, 0.5)
+    love.graphics.setColor(color or {0, 1, 0, 0.5})
+    love.graphics.setLineWidth(lineWidth or 1.5)
     self.shape:draw('line')
     love.graphics.setColor(r,g,b,a)
 end

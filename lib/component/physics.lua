@@ -35,7 +35,8 @@ function Physics.collide(entity, other, delta)
         Physics.resolveImpulse(phy1, phy2, delta)
     elseif other.collider.static then
         entity.pos = entity.pos + delta
-        phy1:bounce(delta)
+        phy1:bounce(delta) -- bounce
+        phy1:applyForce(-phy1.vel:normalized() * phy1.frict) --friction
     end
 end
 
@@ -65,12 +66,8 @@ end
 function Physics:update(dt)
     self:applyForce(self.grav)
 
-    local velNI = -self.vel:normalized()
-    local friction = velNI * self.frict
-    self:applyForce(friction)
-
     local dragMag = self.vel:len2() * self.dragFactor * self.drag
-    local drag = velNI * dragMag
+    local drag = -self.vel:normalized() * dragMag
     self:applyForce(drag)
 
     self.vel = self.vel + self.acc

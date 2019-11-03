@@ -12,24 +12,22 @@ function Scene:init()
     self.signals = Signal.new()
     self.collider = HC.new(150)
     self.timer = Timer.new()
-        
+    self.camera = Camera()
+    
     self.root = Entity()
     self.root.exists, self.root.visible = true, true
-    
     self._entitiesToAdd = {}
     self._entitiesToRemove = {}
-
-    self.camera = Camera()
 end
 
 -- entities
 
 function Scene:addEntity(type, opt)
     type = type or Entity
-    local e = (type and type()) or Entity()
+    local e = type()
     e.scene = self
     table.insert(self._entitiesToAdd, e)
-    if e.add then e:add(opt) end
+    if e.add then e:add(opt) end -- e is aware of scene now
     return e
 end
 
@@ -48,7 +46,7 @@ end
 
 function Scene:_removeEntities()
     for i, e in ipairs(self._entitiesToRemove) do e:remove() end
-    self._entitiesToRemove = {}   
+    self._entitiesToRemove = {}
 end
 
 -- update

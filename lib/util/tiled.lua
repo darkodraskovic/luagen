@@ -3,9 +3,6 @@ local shapes = require 'lib.HC.shapes'
 local Class = require 'lib.hump.class'
 local vector = require 'lib.hump.vector'
 
-local resources = require 'lib.core.resources'
-local Drawable = require 'lib.component.drawable'
-
 local hex2rgb = function(hex)
     hex = hex:gsub("#","")
     return tonumber("0x"..hex:sub(3,4))/255, tonumber("0x"..hex:sub(5,6))/255, tonumber("0x"..hex:sub(7,8))/255, tonumber("0x"..hex:sub(1,2))/255
@@ -24,8 +21,8 @@ function Tiled.flattenVertices(vertices)
     return verts
 end
 
-function Tiled.transformPolygon(o)
-    local verts = Tiled.flattenVertices(o.polygon)
+function Tiled.transformPolygon(poly)
+    local verts = Tiled.flattenVertices(poly)
     local x1,y1 = polygon(unpack(verts)):bbox()
     local dx,dy = 0,0
     if x1 < 0 then
@@ -50,7 +47,7 @@ function Tiled.getShape(o)
     elseif o.shape == 'ellipse' then
         shape = shapes.newCircleShape(0,0,o.width/2)
     elseif o.shape == 'polygon' then
-        local verts = o.vertices or Tiled.transformPolygon(o)
+        local verts = o.vertices or Tiled.transformPolygon(o.polygon)
         shape = shapes.newPolygonShape(unpack(verts))
     end
     return shape
@@ -89,7 +86,7 @@ function Tiled.drawObject(o, pos)
         Tiled._drawObject(o, 0, 0, radiusx, radiusy)
         love.graphics.pop()
     elseif o.shape == 'polygon' then
-        local vertices = o.vertices or Tiled.transformPolygon(o)
+        local vertices = o.vertices or Tiled.transformPolygon(o.polygon)
         Tiled._drawObject(o, unpack(vertices))
     end
 
@@ -99,7 +96,7 @@ end
 function Tiled.getImage(o)
     local w,h
     if o.shape == 'polygon' then
-        o.vertices = o.vertices or Tiled.transformPolygon(o)
+        o.vertices = o.vertices or Tiled.transformPolygon(o.polygon)
         local poly = polygon(unpack(o.vertices))
         local x1,y1,x2,y2 = poly:bbox()
         w,h = x2-x1, y2-y1
@@ -138,11 +135,8 @@ function Tiled.parseMap(map, scene, root)
     end    
 end
 
-function Tiled.imagelayer(layerData, layer, scene)
-    local img = scene:addEntity()
-    img:addComponent(Drawable, {drawable = resources.images[layerData.image]})
-    layer:addChild(img)
-end
+-- function Tiled.imagelayer(layerData, layer, scene)
+-- end
 
 function Tiled.objectgroup(layerData, layer, scene)
     local edir = layerData.properties.edir or 'entity'
@@ -152,7 +146,7 @@ function Tiled.objectgroup(layerData, layer, scene)
         local o = Class.clone(o)
         if o.shape == 'polygon' then
             local dx, dy
-            o.vertices, dx, dy = Tiled.transformPolygon(o)
+            o.vertices, dx, dy = Tiled.transformPolygon(o.polygon)
             o.x = o.x + dx; o.y = o.y + dy
         end
         

@@ -19,4 +19,8 @@ function Drawable:draw()
     love.graphics.draw(self._drawable, self.entity.transform)
 end
 
+function Drawable:remove()
+    self.entity.drawable = nil
+end
+
 return Drawable

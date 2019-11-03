@@ -32,9 +32,9 @@ function Signaler:unregister(handle)
     end
 end
 
-function Signaler:emit(reg, sig, f, ...)
-    if type(reg) == 'string' then f = sig; sig = reg; reg = self.signals end
-    reg:emit(sig, f, ...)
+function Signaler:emit(reg, sig, ...) -- syntactic sugar
+    if type(reg) == 'string' then self.signals:emit(reg, sig, ...)
+    else reg:emit(sig, ...) end
 end
 
 -- remove
