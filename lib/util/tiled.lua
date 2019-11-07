@@ -64,7 +64,7 @@ function Tiled.drawObject(o, pos)
     
     for k,v in pairs(o.properties) do
         local p = k:gsub("^%l", string.upper)
-        if love.graphics['set' .. p] then love.graphics['set' .. k](p) end
+        if love.graphics['set' .. p] then love.graphics['set' .. p](v) end
     end
 
     if o.shape == 'rectangle' then
@@ -81,24 +81,20 @@ function Tiled.drawObject(o, pos)
 end
 
 function Tiled.getImage(o)
-    local w,h
+    local w,h = o.width, o.height
     if o.shape == 'polygon' then
         local poly = polygon(unpack(o.properties.vertices))
         local x1,y1,x2,y2 = poly:bbox(poly)
         w,h = x2-x1, y2-y1
-    else
-        w,h = o.width, o.height
     end
     local lw = o.properties['LineWidth'] or 0
     local canvas = love.graphics.newCanvas(w+lw, h+lw)
-    love.graphics.clear()
-    
-    love.graphics.push()
-    love.graphics.translate(lw/2, lw/2)
+    love.graphics.reset()
     love.graphics.setCanvas(canvas)
-    Tiled.drawObject(o)
-    love.graphics.pop()
     
+    love.graphics.translate(lw/2, lw/2)
+    Tiled.drawObject(o)
+
     love.graphics.reset()
     return canvas
 end
