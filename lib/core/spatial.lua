@@ -47,6 +47,10 @@ function Spatial:center()
     return self.transform:transformPoint(self.size.x/2, self.size.y/2)
 end
 
+function Spatial:toLocal(x, y)
+    return self.transform:clone():translate((-self.pos):unpack()):inverseTransformPoint(x,y)
+end
+
 -- add & remove children
 
 function Spatial:addChild(c)
