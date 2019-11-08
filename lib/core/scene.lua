@@ -27,7 +27,7 @@ function Scene:addEntity(type, opt)
     local e = type()
     e.scene = self
     table.insert(self._entitiesToAdd, e)
-    if e.add then e:add(opt) end -- e is aware of scene now
+    e:add(opt) -- e is aware of scene now
     return e
 end
 

@@ -15,12 +15,12 @@ function Spatial:init()
     self.children = {}
 end
 
--- transform
+-- transform matrix
 
 function Spatial:updateTransform()
     self.transform:setTransformation(
         self.pos.x, self.pos.y, self.rot, self.scale.x, self.scale.y,
-        self.offset.x * self.size.x, self.offset.y * self.size.y)
+        self.offset.x, self.offset.y)
     if self.parent then
         self.transform = self.parent.transform * self.transform
     end
@@ -31,7 +31,7 @@ function Spatial:updateTransformRecursive()
     for i,c in ipairs(self.children) do c:updateTransformRecursive() end
 end
 
--- globals
+-- transform point
 
 function Spatial:position()
     local mat  = {self.transform:getMatrix()}
@@ -49,6 +49,10 @@ end
 
 function Spatial:toLocal(x, y)
     return self.transform:clone():translate((-self.pos):unpack()):inverseTransformPoint(x,y)
+end
+
+function Spatial:toGlobal(x, y)
+    return self.transform:clone():translate((-self.pos):unpack()):transformPoint(x,y)
 end
 
 -- add & remove children

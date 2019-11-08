@@ -12,6 +12,15 @@ function Entity:init()
     self.properties = {} -- user defined properties
 end
 
+function Entity:add(opt)
+    if not opt then return end
+    
+    self.name = opt.name or self.name
+    self.pos = (opt.pos and opt.pos:clone()) or self.pos
+    self.scale = (opt.scale and opt.scale:clone()) or self.scale
+    self.rot = opt.rot or self.rot
+end
+
 function Entity:enter() -- on scene enter
     self:updateTransform()
     if self.collider then self.collider:update() end
