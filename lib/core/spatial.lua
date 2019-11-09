@@ -48,11 +48,12 @@ function Spatial:center()
 end
 
 function Spatial:toLocal(x, y)
-    return self.transform:clone():translate((-self.pos):unpack()):inverseTransformPoint(x,y)
+    local x,y = self.transform:inverseTransformPoint(x,y)
+    return x + self.pos.x, y + self.pos.y -- account for local coord sys transl
 end
 
 function Spatial:toGlobal(x, y)
-    return self.transform:clone():translate((-self.pos):unpack()):transformPoint(x,y)
+    return self.transform:transformPoint(x,y)
 end
 
 -- add & remove children

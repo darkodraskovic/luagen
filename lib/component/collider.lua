@@ -6,14 +6,6 @@ local Collider = Class{ type = 'collider' }
 
 -- utils
 
-function Collider.getOffset(vertices)
-    local poly = shapes.newPolygonShape(unpack(vertices))
-    local x1,y1,x2,y2 = poly:bbox()
-    local bx,by = (x2-x1)/2, (y2-y1)/2
-    local cx,cy = poly:center()
-    return vector(cx-bx,cy-by)
-end
-
 function Collider:mouseover()
     return self.shape:contains(self.entity.scene.camera:mousePosition())
 end
@@ -21,6 +13,7 @@ end
 -- init
 
 function Collider:init()
+    self.offset = vector(0,0)
     self.layer, self.mask = 'a', 'a'
 end
 
@@ -31,16 +24,10 @@ function Collider:add(opt)
     if not opt then return end
     
     self.shape = opt.shape; opt.shape.collider = self
-    if opt.register then e.scene.collider:register(self.shape) end
-    
     self.static = opt.static
+    self.offset = opt.offset or self.offset
     
-    local offset = opt.offset
-    if offset then
-        if offset.x and offset.y then self.offset = offset
-        else self.offset = Collider.getOffset(offset)
-        end
-    end
+    if opt.register then e.scene.collider:register(self.shape) end
     
     if opt.updates then
         e:register(e.scene.signals, 'update-collider', function() self:update() end)
@@ -68,20 +55,17 @@ function Collider:collide()
 end
 
 function Collider:update()
-    self.shape:moveTo(self.entity:center())
-    if self.offset then
-        self.offset:rotateInplace(self.entity:rotation() - self.shape:rotation())
-        self.shape:move(self.offset:unpack())
-    end
-    self.shape:setRotation(self.entity:rotation())
+    local e, s = self.entity, self.shape
+    s:moveTo(e:toGlobal(self.offset:unpack()))
+    s:setRotation(e:rotation())
 end
 
 -- debug
 
 function Collider:draw(color, lineWidth)
     r,g,b,a = love.graphics.getColor()
-    love.graphics.setColor(color or {0, 1, 0, 0.5})
-    love.graphics.setLineWidth(lineWidth or 1.5)
+    love.graphics.setColor(color or {0, 1, 0, 1})
+    love.graphics.setLineWidth(lineWidth or 1)
     self.shape:draw('line')
     love.graphics.setColor(r,g,b,a)
 end

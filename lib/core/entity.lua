@@ -19,6 +19,7 @@ function Entity:add(opt)
     self.pos = (opt.pos and opt.pos:clone()) or self.pos
     self.scale = (opt.scale and opt.scale:clone()) or self.scale
     self.rot = opt.rot or self.rot
+    self.offset = opt.offset or self.offset
 end
 
 function Entity:enter() -- on scene enter

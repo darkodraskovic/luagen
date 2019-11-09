@@ -8,6 +8,7 @@ function Drawable:add(opt)
     e.drawable = self
     e:register('draw-component', function() self:draw() end)
     self:setDrawable(opt.drawable)
+    self.alpha = 1
 end
 
 function Drawable:setDrawable(drawable)
@@ -16,6 +17,7 @@ function Drawable:setDrawable(drawable)
 end
 
 function Drawable:draw()
+    love.graphics.setColor(1, 1, 1, self.alpha)
     love.graphics.draw(self._drawable, self.entity.transform)
 end
 
