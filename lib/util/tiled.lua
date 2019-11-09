@@ -35,13 +35,19 @@ end
 -- SHAPE
 
 function Tiled.getShape(o)
+    local w, h = o.width, o.height
+    local shape, offset
     if o.shape == 'rectangle' then
-        return shapes.newPolygonShape(0,0, o.width,0, o.width, o.height, 0, o.height)
+        shape = shapes.newPolygonShape(0,0, w,0, w, h, 0, h)
+        offset = vector(shape:center())
     elseif o.shape == 'ellipse' then
-        return shapes.newCircleShape(0,0,o.width/2)
+        shape = shapes.newCircleShape(0,0,w/2) 
+        offset = vector(w/2, w/2)
     elseif o.shape == 'polygon' then
-        return shapes.newPolygonShape(unpack(o.properties.vertices))
+        shape = shapes.newPolygonShape(unpack(o.properties.vertices))
+        offset = vector(shape:center())
     end
+    return shape, offset
 end
 
 -- DRAW
@@ -58,15 +64,14 @@ function Tiled._drawObject(o, ...)
     end
 end
 
-function Tiled.drawObject(o, pos)
+function Tiled.drawObject(o, transform)
     love.graphics.push()
-    if pos then love.graphics.translate(pos:unpack()) end
+    if transform then love.graphics.applyTransform(transform) end
     
     for k,v in pairs(o.properties) do
-        local p = k:gsub("^%l", string.upper)
-        if love.graphics['set' .. p] then love.graphics['set' .. p](v) end
+        if love.graphics['set' .. k] then love.graphics['set' .. k](v) end
     end
-
+    
     if o.shape == 'rectangle' then
         Tiled._drawObject(o, 0, 0, o.width, o.height)
     elseif o.shape == 'ellipse' then
@@ -78,25 +83,6 @@ function Tiled.drawObject(o, pos)
     end
 
     love.graphics.pop()
-end
-
-function Tiled.getImage(o)
-    local w,h = o.width, o.height
-    if o.shape == 'polygon' then
-        local poly = polygon(unpack(o.properties.vertices))
-        local x1,y1,x2,y2 = poly:bbox(poly)
-        w,h = x2-x1, y2-y1
-    end
-    local lw = o.properties['LineWidth'] or 0
-    local canvas = love.graphics.newCanvas(w+lw, h+lw)
-    love.graphics.reset()
-    love.graphics.setCanvas(canvas)
-    
-    love.graphics.translate(lw/2, lw/2)
-    Tiled.drawObject(o)
-
-    love.graphics.reset()
-    return canvas
 end
 
 -- MAP
@@ -114,9 +100,6 @@ function Tiled.parseMap(map, scene, root)
         end
     end    
 end
-
--- function Tiled.imagelayer(layerData, layer, scene)
--- end
 
 function Tiled.objectgroup(layerData, layer, scene)
     local edir = layerData.properties.edir or 'entity'
