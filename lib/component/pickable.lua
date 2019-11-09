@@ -2,13 +2,8 @@ local Class = require 'lib.hump.class'
 
 local Pickable = Class{ type = 'pickable', }
 
-function Pickable:init()
-    self.over, self._wasOver = false, false
-end
-
 function Pickable:add()
     local e, s = self.entity, self.entity.scene
-    e.pickable = self
     
     e:register('update-component', function() self:update() end)
     e:register(s.signals, 'mousepressed', function(x, y, button) self:mousepressed(x, y, button) end)
@@ -46,10 +41,6 @@ function Pickable:update()
             self._wasOver = false
         end
     end
-end
-
-function Pickable:remove()
-    self.entity.pickable = nil
 end
 
 return Pickable

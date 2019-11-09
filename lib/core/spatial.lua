@@ -48,8 +48,7 @@ function Spatial:center()
 end
 
 function Spatial:toLocal(x, y)
-    local x,y = self.transform:inverseTransformPoint(x,y)
-    return x + self.pos.x, y + self.pos.y -- account for local coord sys transl
+    return self.transform:inverseTransformPoint(x,y)
 end
 
 function Spatial:toGlobal(x, y)

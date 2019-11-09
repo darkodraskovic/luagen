@@ -5,7 +5,6 @@ local Drawable = Class{ type = 'drawable' }
 
 function Drawable:add(opt)
     local e = self.entity
-    e.drawable = self
     e:register('draw-component', function() self:draw() end)
     self:setDrawable(opt.drawable)
     self.alpha = 1
@@ -19,10 +18,6 @@ end
 function Drawable:draw()
     love.graphics.setColor(1, 1, 1, self.alpha)
     love.graphics.draw(self._drawable, self.entity.transform)
-end
-
-function Drawable:remove()
-    self.entity.drawable = nil
 end
 
 return Drawable

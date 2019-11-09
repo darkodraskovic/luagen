@@ -20,14 +20,13 @@ end
 
 function Physics:add(opt)
     local e = self.entity
-    e.physics = self
     
     e:register(e.scene.signals, 'update-physics', function(dt) self:update(dt) end)
     if opt.collides then e:register(e.signals, 'collide', Physics.collide) end
 end
 
 function Physics.collide(entity, other, delta)
-    local phy1, phy2 = entity.physics, other.physics
+    local phy1, phy2 = entity.components['physics'], other.components['physics']
     if phy1.dynamic and phy2 and phy2.dynamic then
         local sepInv = 1 / (phy1.mass + phy2.mass)
         entity.pos = entity.pos + delta * (phy2.mass * sepInv)
@@ -79,10 +78,6 @@ function Physics:update(dt)
     self.entity.pos = self.entity.pos + self.vel * dt
 
     self.acc.x, self.acc.y = 0, 0
-end
-
-function Physics:remove()
-    self.entity.physics = nil
 end
 
 return Physics

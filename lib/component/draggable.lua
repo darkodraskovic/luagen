@@ -23,16 +23,19 @@ function Draggable:mousereleased(x, y, button)
 end
 
 function Draggable:update()
-    local _, x, y = self.entity.components['pickable']:isDown(1)
-    if self.mousePosDiff then
-        local e = self.entity
-        local globalPos = vector(x,y) - self.mousePosDiff
-        local lx, ly = e:toLocal(globalPos:unpack())
-        local lim = self.limit
-        if lim then
-            e.pos.x = math.max(lim.x[1], math.min(lim.x[2], lx))
-            e.pos.y = math.max(lim.y[1], math.min(lim.y[2], ly))
-        end
+    if not self.mousePosDiff then return end
+
+    local e = self.entity
+    local x, y = e.scene.camera:mousePosition()
+    local globalPos = vector(x,y) - self.mousePosDiff
+    local lx, ly = e.parent:toLocal(globalPos:unpack())
+    
+    local lim = self.limit
+    if lim then
+        e.pos.x = math.max(lim.x[1], math.min(lim.x[2], lx))
+        e.pos.y = math.max(lim.y[1], math.min(lim.y[2], ly))
+    else
+        e.pos.x, e.pos.y = lx, ly
     end
 end
 
