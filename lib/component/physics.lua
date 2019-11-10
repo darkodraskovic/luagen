@@ -26,6 +26,8 @@ function Physics:add(opt)
 end
 
 function Physics.collide(entity, other, delta)
+    if delta:len2() <= 0 then return end
+    
     local phy1, phy2 = entity.components['physics'], other.components['physics']
     if phy1.dynamic and phy2 and phy2.dynamic then
         local sepInv = 1 / (phy1.mass + phy2.mass)

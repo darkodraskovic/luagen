@@ -115,7 +115,6 @@ function Tiled.objectgroup(layerData, layer, scene)
         
         local e = scene:addEntity(require(edir .. '.' .. o.type:lower()), o)
         e.pos = vector(o.x, o.y)
-        if string.len(o.name) > 0 then e.name = o.name end
         layer:addChild(e)
 
         for component in string.gmatch(o.properties.components or "", "[^,]+") do

@@ -15,19 +15,19 @@ function Draggable:add(opt)
 end
 
 function Draggable:mousepressed(e, x, y, button)
-    self.mousePosDiff = vector(x,y) - vector(e:position())
+    self.dragged = vector(x,y) - vector(e:position())
 end
 
 function Draggable:mousereleased(x, y, button)
-    self.mousePosDiff = nil
+    self.dragged = nil
 end
 
 function Draggable:update()
-    if not self.mousePosDiff then return end
+    if not self.dragged then return end
 
     local e = self.entity
     local x, y = e.scene.camera:mousePosition()
-    local globalPos = vector(x,y) - self.mousePosDiff
+    local globalPos = vector(x,y) - self.dragged
     local lx, ly = e.parent:toLocal(globalPos:unpack())
     
     local lim = self.limit
