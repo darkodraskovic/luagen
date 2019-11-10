@@ -38,7 +38,7 @@ function Tiled.getShape(o)
     local w, h = o.width, o.height
     local shape, offset
     if o.shape == 'rectangle' then
-        shape = shapes.newPolygonShape(0,0, w,0, w, h, 0, h)
+        shape = shapes.newPolygonShape(0,0, w,0, w,h, 0,h)
         offset = vector(shape:center())
     elseif o.shape == 'ellipse' then
         shape = shapes.newCircleShape(0,0,w/2) 

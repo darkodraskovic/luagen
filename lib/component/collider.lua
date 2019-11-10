@@ -17,23 +17,20 @@ function Collider:init()
     self.layer, self.mask = 'a', 'a'
 end
 
-function Collider:add(opt)
+function Collider:add(opt)    
     local e = self.entity
     e.collider = self
     
-    if not opt then return end
-    
     self.shape = opt.shape; opt.shape.collider = self
+    e.scene.collider:register(self.shape)
+    
     self.static = opt.static
     self.offset = opt.offset or self.offset
-    
-    if opt.register then e.scene.collider:register(self.shape) end
-    
-    if opt.updates then
+
+    if opt.updates ~= false then
         e:register(e.scene.signals, 'update-collider', function() self:update() end)
     end
-    
-    if opt.collides then
+    if opt.collides ~= false then
         e:register(e.scene.signals, 'collide', function () self:collide() end)
     end        
 end
