@@ -87,13 +87,13 @@ end
 
 -- MAP
 
-function Tiled.parseMap(map, scene, root)
-    root = root or scene.root
+function Tiled.parseMap(map, scene, parent)
     for i,layerData in ipairs(map.layers) do
         local layer = scene:addEntity()
         layer.name = layerData.name
         layer.visible = layerData.visible
-        root:addChild(layer)
+        parent = parent or scene
+        parent:addChild(layer)
         for k,v in pairs(layerData.properties) do layer.properties[k] = v end
         if Tiled[layerData.type] then
             Tiled[layerData.type](layerData, layer, scene)

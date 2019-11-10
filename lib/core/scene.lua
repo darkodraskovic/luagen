@@ -8,17 +8,16 @@ local Spatial = require 'lib.core.spatial'
 local Entity = require 'lib.core.entity'
 local Signaler = require 'lib.core.signaler'
 
-local Scene = Class{__includes = Signaler}
+local Scene = Class{__includes = {Spatial, Signaler}}
 
 function Scene:init()
+    Spatial.init(self)
     Signaler.init(self)
     
     self.collider = HC.new(150)
     self.timer = Timer.new()
     self.camera = Camera()
     
-    self.root = Spatial()
-    self.root._exists, self.root.visible = true, true
     self._entitiesToAdd = {}
     self._entitiesToRemove = {}
 end
@@ -57,9 +56,9 @@ end
 function Scene:update(dt)
     self.timer:update(dt)
     self:_addEntities()
-    self.root:update(dt)
+    Spatial.update(self, dt)
     self:emit('update-physics', dt)
-    self.root:updateTransformRecursive()
+    self:updateTransformRecursive()
     self:emit('update-collider', dt)
     self:emit('collide', dt)
     self:_removeEntities()
@@ -69,22 +68,21 @@ end
 
 function Scene:draw()
     self.camera:attach()
-    self.root:draw()
+    Spatial.draw(self)
     self.camera:detach()
 end
 
 -- remove
 
 function Scene:remove()
-    self.root:remove()
-
     self._entitiesToAdd = {}
     self._entitiesToRemove = {}
 
     self.collider:resetHash()
-
     self.timer:clear()
-    Signaler.remove(self)    
+
+    Signaler.remove(self)
+    Spatial.remove(self)    
 end
 
 return Scene

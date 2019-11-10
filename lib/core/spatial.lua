@@ -30,8 +30,13 @@ function Spatial:updateTransform()
 end
 
 function Spatial:updateTransformRecursive()
-    self:updateTransform()
-    for i,c in ipairs(self.children) do c:updateTransformRecursive() end
+    self.transform:setTransformation(
+        self.pos.x, self.pos.y, self.rot, self.scale.x, self.scale.y,
+        self.offset.x, self.offset.y)
+    for i,c in ipairs(self.children) do
+        c:updateTransformRecursive()
+        c.transform = self.transform * c.transform
+    end
 end
 
 -- transform point
