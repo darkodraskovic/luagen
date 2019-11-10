@@ -13,6 +13,9 @@ function Spatial:init()
     
     self.parent = nil
     self.children = {}
+    
+    self._exists =  false
+    self.visible =  true
 end
 
 -- transform matrix
@@ -103,11 +106,15 @@ end
 -- update & draw
 
 function Spatial:update(dt)
-    for i,c in ipairs(self.children) do c:update(dt) end
+    for i,c in ipairs(self.children) do
+        if c._exists then c:update(dt) end
+    end
 end
 
 function Spatial:draw()
-    for i,c in ipairs(self.children) do c:draw() end
+    for i,c in ipairs(self.children) do
+        if c.visible then c:draw() end
+    end
 end
 
 -- remove
