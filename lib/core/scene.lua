@@ -81,12 +81,12 @@ end
 
 -- remove
 
-function Scene:leave()
-    self._entitiesToAdd = {}
-    self._entitiesToRemove = {}
-
+function Scene:remove()
     self.collider:resetHash()
     self.timer:clear()
+    
+    self._entitiesToAdd = {}
+    self._entitiesToRemove = {}
 
     Signaler.remove(self)
     Spatial.remove(self)

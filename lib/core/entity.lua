@@ -17,7 +17,7 @@ function Entity:add(opt)
 
     if opt.name and string.len(opt.name) > 0 then self.name = opt.name end
     self.pos = (opt.pos and opt.pos:clone()) or self.pos
-    self.scale = (opt.scale and opt.scale:clone()) or self.scale
+    self.scl = (opt.scl and opt.scl:clone()) or self.scl
     self.rot = opt.rot or self.rot
     self.offset = opt.offset or self.offset
     if opt.parent then opt.parent:addChild(self) end

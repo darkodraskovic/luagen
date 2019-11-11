@@ -7,7 +7,7 @@ function Spatial:init()
     self.transform = love.math.newTransform()
     self.pos = vector(0,0)
     self.rot = 0
-    self.scale = vector(1,1)
+    self.scl = vector(1,1)
     self.size = vector(0,0)
     self.offset = vector(0,0)
     
@@ -22,7 +22,7 @@ end
 
 function Spatial:setTransform()
     self.transform:setTransformation(
-        self.pos.x, self.pos.y, self.rot, self.scale.x, self.scale.y,
+        self.pos.x, self.pos.y, self.rot, self.scl.x, self.scl.y,
         self.offset.x, self.offset.y)
 end
     
@@ -51,10 +51,10 @@ function Spatial:rotation()
     return math.atan2(mat[5], mat[1])
 end
 
--- function Spatial:sc()
---     local mat  = {self.transform:getMatrix()}
---     return vector(mat[1], mat[2]):len(), vector(mat[5], mat[6]):len()
--- end
+function Spatial:scale()
+    local mat  = {self.transform:getMatrix()}
+    return vector(mat[1], mat[2]):len(), vector(mat[5], mat[6]):len()
+end
 
 function Spatial:center()
     return self.transform:transformPoint(self.size.x/2, self.size.y/2)
