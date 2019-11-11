@@ -20,22 +20,22 @@ end
 
 -- transform matrix
 
-function Spatial:updateTransform()
+function Spatial:setTransform()
     self.transform:setTransformation(
         self.pos.x, self.pos.y, self.rot, self.scale.x, self.scale.y,
         self.offset.x, self.offset.y)
-    if self.parent then
-        self.transform = self.parent.transform * self.transform
-    end
+end
+    
+function Spatial:updateTransform()
+    self:setTransform()
+    if self.parent then self.transform = self.parent.transform * self.transform end
 end
 
 function Spatial:updateTransformRecursive()
-    self.transform:setTransformation(
-        self.pos.x, self.pos.y, self.rot, self.scale.x, self.scale.y,
-        self.offset.x, self.offset.y)
     for i,c in ipairs(self.children) do
-        c:updateTransformRecursive()
+        c:setTransform()
         c.transform = self.transform * c.transform
+        c:updateTransformRecursive()
     end
 end
 
@@ -50,6 +50,11 @@ function Spatial:rotation()
     local mat  = {self.transform:getMatrix()}
     return math.atan2(mat[5], mat[1])
 end
+
+-- function Spatial:sc()
+--     local mat  = {self.transform:getMatrix()}
+--     return vector(mat[1], mat[2]):len(), vector(mat[5], mat[6]):len()
+-- end
 
 function Spatial:center()
     return self.transform:transformPoint(self.size.x/2, self.size.y/2)

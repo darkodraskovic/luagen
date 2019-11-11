@@ -51,25 +51,32 @@ function Scene:_removeEntities()
     self._entitiesToRemove = {}
 end
 
--- update
+-- callbacks
 
 function Scene:update(dt)
     self.timer:update(dt)
     self:_addEntities()
     Spatial.update(self, dt)
     self:emit('update-physics', dt)
+    self:setTransform()
     self:updateTransformRecursive()
     self:emit('update-collider', dt)
     self:emit('collide', dt)
     self:_removeEntities()
 end
 
--- draw
-
 function Scene:draw()
     self.camera:attach()
     Spatial.draw(self)
     self.camera:detach()
+end
+
+function Scene:mousepressed(...)
+    self:emit('mousepressed', ...)
+end
+
+function Scene:mousereleased(...)
+    self:emit('mousereleased', ...)
 end
 
 -- remove
