@@ -81,7 +81,7 @@ end
 
 -- remove
 
-function Scene:remove()
+function Scene:leave()
     self._entitiesToAdd = {}
     self._entitiesToRemove = {}
 
@@ -89,7 +89,7 @@ function Scene:remove()
     self.timer:clear()
 
     Signaler.remove(self)
-    Spatial.remove(self)    
+    Spatial.remove(self)
 end
 
 return Scene
