@@ -1,6 +1,5 @@
 local HC = require 'lib.HC'
 local Class = require 'lib.hump.class'
-local Signal = require 'lib.hump.signal'
 local Timer = require 'lib.hump.timer'
 
 local Camera = require 'lib.hump.camera'
@@ -20,6 +19,8 @@ function Scene:init()
     
     self._entitiesToAdd = {}
     self._entitiesToRemove = {}
+    
+    self.properties = {}
 end
 
 -- entities
@@ -71,25 +72,21 @@ function Scene:draw()
     self.camera:detach()
 end
 
-function Scene:mousepressed(...)
-    self:emit('mousepressed', ...)
-end
-
-function Scene:mousereleased(...)
-    self:emit('mousereleased', ...)
-end
-
 -- remove
 
 function Scene:remove()
-    self.collider:resetHash()
-    self.timer:clear()
-    
-    self._entitiesToAdd = {}
-    self._entitiesToRemove = {}
+    for i, e in ipairs(self._entitiesToRemove) do e:remove() end
+    self._entitiesToRemove = {}    
 
-    Signaler.remove(self)
+    for i, e in ipairs(self._entitiesToAdd) do e:remove() end
+    self._entitiesToAdd = {}    
+
     Spatial.remove(self)
+    
+    self.collider:resetHash()
+    
+    self.timer:clear()
+    Signaler.remove(self)
 end
 
 return Scene

@@ -72,7 +72,7 @@ end
 
 function Spatial:addChild(c)
     if c.parent then c.parent:removeChild(c) end
-    c.parent = self
+    c.parent = self    
     table.insert(self.children, c)
 end
 
