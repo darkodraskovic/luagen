@@ -1,9 +1,13 @@
 local Class = require 'lib.hump.class'
 local vector = require 'lib.hump.vector'
 
-local Spatial = Class{}
+local Signaler = require 'lib.core.signaler'
+
+local Spatial = Class{__includes = Signaler}
 
 function Spatial:init()
+    Signaler.init(self)
+    
     self.transform = love.math.newTransform()
     self.pos = vector(0,0)
     self.rot = 0
@@ -142,6 +146,8 @@ function Spatial:remove()
     local children = self.children -- removeChildren() removes ref to children
     self:removeChildren()
     for i,c in ipairs(children) do c:remove() end
+
+    Signaler.remove(self)    
 end
 
 return Spatial

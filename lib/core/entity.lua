@@ -1,13 +1,12 @@
 local Class = require 'lib.hump.class'
 
 local Spatial = require 'lib.core.spatial'
-local Signaler = require 'lib.core.signaler'
 
-local Entity = Class{__includes = {Spatial, Signaler}}
+local Entity = Class{__includes = Spatial}
 
 function Entity:init()
     Spatial.init(self)
-    Signaler.init(self)
+
     self.components = {}
     self.properties = {} -- user defined properties
 end
@@ -50,7 +49,6 @@ end
 function Entity:remove()
     for _, c in pairs(self.components) do self:removeComponent(c) end
     Spatial.remove(self)
-    Signaler.remove(self)
 end
 
 return Entity

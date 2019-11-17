@@ -5,13 +5,11 @@ local Timer = require 'lib.hump.timer'
 local Camera = require 'lib.hump.camera'
 local Spatial = require 'lib.core.spatial'
 local Entity = require 'lib.core.entity'
-local Signaler = require 'lib.core.signaler'
 
-local Scene = Class{__includes = {Spatial, Signaler}}
+local Scene = Class{__includes = Spatial}
 
 function Scene:init()
     Spatial.init(self)
-    Signaler.init(self)
     
     self.collider = HC.new(150)
     self.timer = Timer.new()
@@ -79,14 +77,12 @@ function Scene:remove()
     self._entitiesToRemove = {}    
 
     for i, e in ipairs(self._entitiesToAdd) do e:remove() end
-    self._entitiesToAdd = {}    
-
+    self._entitiesToAdd = {}
+    
     Spatial.remove(self)
     
     self.collider:resetHash()
-    
     self.timer:clear()
-    Signaler.remove(self)
 end
 
 return Scene
