@@ -5,7 +5,7 @@ local Pickable = Class{ type = 'pickable', }
 function Pickable:add()
     local e, s = self.entity, self.entity.scene
     
-    e:register('update-component', function() self:update() end)
+    e:register('pre-update', function() self:update() end)
     e:register(s.signals, 'mousepressed', function(x, y, button) self:mousepressed(x, y, button) end)
     e:register(s.signals, 'mousereleased', function(x, y, button) self:mousereleased(x, y, button) end)
 end

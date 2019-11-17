@@ -8,7 +8,7 @@ local Draggable = Class{ type = 'draggable', }
 function Draggable:add(opt)
     local e = self.entity
     if not e.components['pickable'] then e:addComponent(Pickable) end
-    e:register('update-component', function() self:update() end)
+    e:register('pre-update', function() self:update() end)
     e:register(e.signals, 'mousepressed', function(...) self:mousepressed(...) end)
     e:register(e.scene.signals, 'mousereleased', function(...) self:mousereleased(...) end)
     self.limit = opt and opt.limit

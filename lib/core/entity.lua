@@ -43,20 +43,6 @@ function Entity:removeComponent(c)
     self.components[c.type] = nil
 end
 
--- update & draw
-
-function Entity:update(dt)
-    self.signals:emit('update-component', dt)
-    Spatial.update(self, dt)
-end
-
-function Entity:draw()
-    self:emit('draw-component', dt)
-    Spatial.draw(self)
-end
-
--- remove & module
-
 function Entity:removeDeffered()
     self.scene:removeEntity(self)
 end

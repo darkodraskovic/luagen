@@ -117,13 +117,21 @@ end
 
 function Spatial:update(dt)
     for i,c in ipairs(self.children) do
-        if c._exists then c:update(dt) end
+        if c._exists then
+            c.signals:emit('pre-update', dt)
+            c:update(dt)
+            c.signals:emit('post-update', dt)
+        end
     end
 end
 
 function Spatial:draw()
     for i,c in ipairs(self.children) do
-        if c.visible then c:draw() end
+        if c.visible then
+            c.signals:emit('pre-draw')
+            c:draw()
+            c.signals:emit('post-draw')
+        end
     end
 end
 

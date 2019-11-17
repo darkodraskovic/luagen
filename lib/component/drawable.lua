@@ -5,7 +5,7 @@ local Drawable = Class{ type = 'drawable' }
 
 function Drawable:add(opt)
     local e = self.entity
-    e:register('draw-component', function() self:draw() end)
+    e:register('pre-draw', function() self:draw() end)
     self:setDrawable(opt.drawable)
     self.alpha = 1
 end
