@@ -17,7 +17,7 @@ end
 
 function Drawable:draw()
     love.graphics.setColor(1, 1, 1, self.alpha)
-    love.graphics.draw(self._drawable, self.entity.transform)
+    love.graphics.draw(self._drawable)
 end
 
 return Drawable

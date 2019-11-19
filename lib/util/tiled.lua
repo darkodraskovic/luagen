@@ -64,9 +64,8 @@ function Tiled._drawObject(o, ...)
     end
 end
 
-function Tiled.drawObject(o, transform)
+function Tiled.drawObject(o)
     love.graphics.push()
-    if transform then love.graphics.applyTransform(transform) end
     
     for k,v in pairs(o.properties) do
         if love.graphics['set' .. k] then love.graphics['set' .. k](v) end

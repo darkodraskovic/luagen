@@ -3,12 +3,15 @@ local vector = require 'lib.hump.vector'
 
 local Signaler = require 'lib.core.signaler'
 
-local Spatial = Class{__includes = Signaler}
+local Spatial = Class{
+    __includes = Signaler,
+    _transform = love.math.newTransform(),
+}
 
 function Spatial:init()
     Signaler.init(self)
-    
     self.transform = love.math.newTransform()
+    
     self.pos = vector(0,0)
     self.rot = 0
     self.scl = vector(1,1)
@@ -23,22 +26,17 @@ function Spatial:init()
 end
 
 -- transform matrix
-
-function Spatial:setTransform()
+    
+function Spatial:updateTransform()
     self.transform:setTransformation(
         self.pos.x, self.pos.y, self.rot, self.scl.x, self.scl.y,
         self.offset.x, self.offset.y)
-end
-    
-function Spatial:updateTransform()
-    self:setTransform()
-    if self.parent then self.transform = self.parent.transform * self.transform end
+    self.transform = self.parent.transform * self.transform
 end
 
 function Spatial:updateTransformRecursive()
     for i,c in ipairs(self.children) do
-        c:setTransform()
-        c.transform = self.transform * c.transform
+        c:updateTransform()
         c:updateTransformRecursive()
     end
 end
@@ -119,23 +117,33 @@ end
 
 -- update & draw
 
+function Spatial:_update(dt)
+    self.signals:emit('pre-update', dt)
+    self:update(dt)
+    self.signals:emit('post-update', dt)    
+end
+
 function Spatial:update(dt)
     for i,c in ipairs(self.children) do
-        if c._exists then
-            c.signals:emit('pre-update', dt)
-            c:update(dt)
-            c.signals:emit('post-update', dt)
-        end
+        if c._exists then c:_update(dt) end
     end
+end
+
+function Spatial:_draw()
+    Spatial._transform:setTransformation(
+        self.pos.x, self.pos.y, self.rot, self.scl.x, self.scl.y,
+        self.offset.x, self.offset.y)    
+    love.graphics.push()
+    love.graphics.applyTransform(self._transform)
+    self.signals:emit('pre-draw')
+    self:draw()
+    self.signals:emit('post-draw')
+    love.graphics.pop()
 end
 
 function Spatial:draw()
     for i,c in ipairs(self.children) do
-        if c.visible then
-            c.signals:emit('pre-draw')
-            c:draw()
-            c.signals:emit('post-draw')
-        end
+        if c.visible then c:_draw() end
     end
 end
 

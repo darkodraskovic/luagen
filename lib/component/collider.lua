@@ -60,11 +60,14 @@ end
 -- debug
 
 function Collider:draw(color, lineWidth)
-    r,g,b,a = love.graphics.getColor()
     love.graphics.setColor(color or {0, 1, 0, 1})
     love.graphics.setLineWidth(lineWidth or 1)
+    love.graphics.push()
+    love.graphics.origin()
+    self.entity.scene.camera:attach()
     self.shape:draw('line')
-    love.graphics.setColor(r,g,b,a)
+    self.entity.scene.camera:detach()
+    love.graphics.pop()
 end
 
 -- remove
