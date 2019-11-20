@@ -15,7 +15,6 @@ function Spatial:init()
     self.pos = vector(0,0)
     self.rot = 0
     self.scl = vector(1,1)
-    self.size = vector(0,0)
     self.offset = vector(0,0)
     
     self.parent = nil
@@ -44,22 +43,18 @@ end
 -- transform point
 
 function Spatial:position()
-    local mat  = {self.transform:getMatrix()}
-    return mat[4], mat[8]
+    local _,_,_,x, _,_,_,y  = self.transform:getMatrix()
+    return x, y
 end
 
 function Spatial:rotation()
-    local mat  = {self.transform:getMatrix()}
-    return math.atan2(mat[5], mat[1])
+    local x,_,_,_,y  = self.transform:getMatrix()
+    return math.atan2(y, x)
 end
 
 function Spatial:scale()
-    local mat  = {self.transform:getMatrix()}
-    return vector(mat[1], mat[2]):len(), vector(mat[5], mat[6]):len()
-end
-
-function Spatial:center()
-    return self.transform:transformPoint(self.size.x/2, self.size.y/2)
+    local x1,y1,_,_,x2,y2  = self.transform:getMatrix()
+    return vector(x1,y1):len(), vector(x2,y2):len()
 end
 
 function Spatial:toLocal(x, y)
