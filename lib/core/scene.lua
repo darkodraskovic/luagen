@@ -55,6 +55,7 @@ end
 function Scene:update(dt)
     self.timer:update(dt)
     self:_addEntities()
+    self:emit('pre-update', dt)
     Spatial.update(self, dt)
     self:emit('update-physics', dt)
     self:updateTransformRecursive()
@@ -65,6 +66,7 @@ end
 
 function Scene:draw()
     self.camera:attach()
+    self:emit('pre-draw', dt)
     Spatial.draw(self)
     self.camera:detach()
 end
