@@ -111,9 +111,9 @@ function Tiled.objectgroup(layerData, layer, scene)
             o.properties.vertices, dx, dy = Tiled.processVertices(o.polygon)
             o.x = o.x + dx; o.y = o.y + dy
         end
-        
+
+        o.pos = vector(o.x, o.y)
         local e = scene:addEntity(require(edir .. '.' .. o.type:lower()), o)
-        e.pos = vector(o.x, o.y)
         layer:addChild(e)
 
         for component in string.gmatch(o.properties.components or "", "[^,]+") do

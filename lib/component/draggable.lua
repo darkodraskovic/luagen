@@ -11,15 +11,17 @@ function Draggable:add(opt)
     e:register('pre-update', function() self:update() end)
     e:register(e.signals, 'mousepressed', function(...) self:mousepressed(...) end)
     e:register(e.scene.signals, 'mousereleased', function(...) self:mousereleased(...) end)
+    
     self.limit = opt and opt.limit
+    self.button = (opt and opt.button) or 1
 end
 
 function Draggable:mousepressed(e, x, y, button)
-    self.dragged = vector(x,y) - vector(e:position())
+    if button == self.button then self.dragged = vector(x,y) - vector(e:toGlobal(e.offset:unpack())) end
 end
 
 function Draggable:mousereleased(x, y, button)
-    self.dragged = nil
+    if button == self.button then self.dragged = nil end
 end
 
 function Draggable:update()
@@ -28,7 +30,7 @@ function Draggable:update()
     local e = self.entity
     local x, y = e.scene.camera:mousePosition()
     local globalPos = vector(x,y) - self.dragged
-    local lx, ly = e.parent:toLocal(globalPos:unpack())
+    local lx, ly = e.parent:toLocal((globalPos):unpack())
     
     local lim = self.limit
     if lim then

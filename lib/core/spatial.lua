@@ -25,16 +25,12 @@ function Spatial:init()
 end
 
 -- transform matrix
-    
+
 function Spatial:updateTransform()
     Spatial._transform:setTransformation(
         self.pos.x, self.pos.y, self.rot, self.scl.x, self.scl.y,
         self.offset.x, self.offset.y)
     self.transform:setMatrix(self.parent.transform:getMatrix()):apply(Spatial._transform)
-    -- self.transform:setTransformation(
-    --     self.pos.x, self.pos.y, self.rot, self.scl.x, self.scl.y,
-    --     self.offset.x, self.offset.y)
-    -- self.transform = self.parent.transform * self.transform
 end
 
 function Spatial:updateTransformRecursive()
