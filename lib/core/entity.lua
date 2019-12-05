@@ -15,11 +15,12 @@ function Entity:add(opt)
     if not opt then return end
 
     if opt.name and string.len(opt.name) > 0 then self.name = opt.name end
-    self.pos = (opt.pos and opt.pos:clone()) or self.pos
-    self.scl = (opt.scl and opt.scl:clone()) or self.scl
-    self.rot = opt.rot or self.rot
-    self.offset = opt.offset or self.offset
     if opt.parent then opt.parent:addChild(self) end
+    
+    if opt.pos then self.pos = opt.pos:clone() end
+    if opt.scl then self.scl = opt.scl:clone() end
+    self.rot = opt.rot or self.rot
+    if opt.offset then self.offset = opt.offset:clone() end
 end
 
 function Entity:enter() -- on scene enter

@@ -35,26 +35,27 @@ function Collider:add(opt)
     end        
 end
 
--- collide & update
-
-function Collider:collide()
-    local e1 = self.entity
-    if not e1._exists then return end
-    
-    local candidates = e1.scene.collider:neighbors(self.shape)
-    for other in pairs(candidates) do
-        local e2 = other.collider.entity
-        if e2._exists and self.mask:find(other.collider.layer) then
-            local collides, dx, dy = self.shape:collidesWith(other)
-            if collides then e1.signals:emit('collide', e1, e2, vector(dx, dy)) end
-        end
-    end
-end
+-- update & collide
 
 function Collider:update()
     local e, s = self.entity, self.shape
     s:moveTo(e:toGlobal(self.offset:unpack()))
     s:setRotation(e:rotation())
+end
+
+function Collider:collide()
+    local e1 = self.entity
+    if not e1._exists then return end
+    
+    local s1 = self.shape
+    local candidates = e1.scene.collider:neighbors(s1)
+    for s2 in pairs(candidates) do
+        local e2 = s2.collider.entity
+        if e2._exists and self.mask:find(e2.collider.layer) then
+            local collides, dx, dy = s1:collidesWith(s2)
+            if collides then e1.signals:emit('collide', e1, e2, vector(dx, dy)) end
+        end
+    end
 end
 
 -- debug

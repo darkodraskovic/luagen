@@ -10,8 +10,8 @@ function Pickable:add()
     e:register(s.signals, 'mousereleased', function(x, y, button) self:mousereleased(x, y, button) end)
 end
 
-function Pickable:isDown(button, ...)
-    return self.over and love.mouse.isDown(button, ...), self.entity.scene.camera:mousePosition()
+function Pickable:isDown(...)
+    return self.over and love.mouse.isDown(...), self.entity.scene.camera:mousePosition()
 end
 
 function Pickable:mousepressed(x, y, button)

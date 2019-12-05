@@ -25,7 +25,7 @@ function Signaler:unregister(handle)
                 if handle == f then
                     reg:remove(sig, handle)
                     table.remove(self.observers[reg][sig], i)
-                    break
+                    return
                 end
             end
         end

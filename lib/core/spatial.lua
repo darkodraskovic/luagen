@@ -78,14 +78,9 @@ function Spatial:removeChild(c)
         if c == v then
             table.remove(self.children, i)
             c.parent = nil
-            break
+            return
         end
     end
-end
-
-function Spatial:removeChildren()
-    for i,c in ipairs(self.children) do c.parent = nil end
-    self.children = {}
 end
 
 -- get & find children
@@ -145,12 +140,9 @@ end
 -- remove
 
 function Spatial:remove()
+    for i,c in ipairs(self.children) do c:remove() end
     if self.parent then self.parent:removeChild(self) end
-    local children = self.children -- removeChildren() removes ref to children
-    self:removeChildren()
-    for i,c in ipairs(children) do c:remove() end
-
-    Signaler.remove(self)    
+    Signaler.remove(self)
 end
 
 return Spatial

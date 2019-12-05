@@ -33,7 +33,7 @@ function Scene:addEntity(type, opt)
 end
 
 function Scene:_addEntities()
-    for i, e in ipairs(self._entitiesToAdd) do
+    for _, e in ipairs(self._entitiesToAdd) do
         e._exists = true
         e:enter()
     end
@@ -46,7 +46,7 @@ function Scene:removeEntity(e)
 end
 
 function Scene:_removeEntities()
-    for i, e in ipairs(self._entitiesToRemove) do e:remove() end
+    for _, e in ipairs(self._entitiesToRemove) do e:remove() end
     self._entitiesToRemove = {}
 end
 
@@ -68,6 +68,7 @@ function Scene:draw()
     self.camera:attach()
     self:emit('pre-draw', dt)
     Spatial.draw(self)
+    self:emit('post-draw', dt)    
     self.camera:detach()
 end
 
