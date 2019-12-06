@@ -24,7 +24,7 @@ function Entity:add(opt)
 end
 
 function Entity:enter() -- on scene enter
-    self:updateTransform()
+    if self.parent then self:updateTransform() end
     if self.collider then self.collider:update() end
 end
 

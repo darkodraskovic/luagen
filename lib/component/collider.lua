@@ -51,7 +51,7 @@ function Collider:collide()
     local candidates = e1.scene.collider:neighbors(s1)
     for s2 in pairs(candidates) do
         local e2 = s2.collider.entity
-        if e2._exists and self.mask:find(e2.collider.layer) then
+        if e2._exists and self.mask:find(s2.collider.layer) then
             local collides, dx, dy = s1:collidesWith(s2)
             if collides then e1.signals:emit('collide', e1, e2, vector(dx, dy)) end
         end

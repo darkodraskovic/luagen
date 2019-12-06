@@ -105,6 +105,12 @@ function Spatial:findChild(k,v)
     end
 end
 
+function Spatial:getChildIndex(child)
+    for i,v in ipairs(self.children) do
+        if v == child then return i end
+    end
+end
+
 -- update & draw
 
 function Spatial:_update(dt)
